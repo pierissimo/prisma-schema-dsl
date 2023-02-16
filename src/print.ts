@@ -73,6 +73,9 @@ export function printGenerator(generator: Generator): string {
   if (generator.binaryTargets?.length) {
     fields.push(`binaryTargets = ${JSON.stringify(generator.binaryTargets)}`);
   }
+  if (generator.previewFeatures?.length) {
+    fields.push(`previewFeatures = ${JSON.stringify(generator.previewFeatures)}`);
+  }
   return `generator ${generator.name} {
   ${fields.join("\n  ")}
 }`;

@@ -235,12 +235,14 @@ export function createGenerator(
   name: string,
   provider: string,
   output: string | null = null,
-  binaryTargets: string[] = []
+  binaryTargets: string[] = [],
+  previewFeatures: string[] = [],
 ): Generator {
   return {
     name,
     provider,
     output,
     binaryTargets,
+    previewFeatures,
   };
 }
