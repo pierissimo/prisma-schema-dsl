@@ -11,6 +11,7 @@ import {
   Model,
   NOW,
   ObjectField,
+  PreviewFeature,
   ReferentialActions,
   ScalarField,
   ScalarFieldDefault,
@@ -278,16 +279,19 @@ export function createGenerator({
   provider,
   output = null,
   binaryTargets = [],
+  previewFeatures = [],
 }: {
   name: string;
   provider: string;
   output?: string | null;
   binaryTargets?: string[];
+  previewFeatures?: Array<PreviewFeature>;
 }): Generator {
   return {
     name,
     provider,
     output,
     binaryTargets,
+    previewFeatures,
   };
 }

@@ -1,20 +1,20 @@
 import isEmpty from "lodash.isempty";
 import {
-  Schema,
-  DataSource,
-  isDataSourceURLEnv,
-  DataSourceURLEnv,
-  Model,
-  ObjectField,
-  ScalarField,
-  FieldKind,
   BaseField,
+  DataSource,
+  DataSourceProvider,
+  DataSourceURLEnv,
+  Enum,
+  FieldKind,
   Generator,
   isCallExpression,
-  ScalarFieldDefault,
-  Enum,
-  DataSourceProvider,
+  isDataSourceURLEnv,
+  Model,
+  ObjectField,
   ReferentialActions,
+  ScalarField,
+  ScalarFieldDefault,
+  Schema,
 } from "@pmaltese/prisma-schema-dsl-types";
 import { formatSchema } from "@prisma/internals";
 
@@ -73,6 +73,11 @@ export function printGenerator(generator: Generator): string {
   }
   if (generator.binaryTargets?.length) {
     fields.push(`binaryTargets = ${JSON.stringify(generator.binaryTargets)}`);
+  }
+  if (generator.previewFeatures?.length) {
+    fields.push(
+      `previewFeatures = ${JSON.stringify(generator.previewFeatures)}`
+    );
   }
   return `generator ${generator.name} {
   ${fields.join("\n  ")}

@@ -61,6 +61,7 @@ const EXAMPLE_GENERATOR_NAME = "exampleGeneratorName";
 const EXAMPLE_GENERATOR_PROVIDER = "exampleGeneratorProvider";
 const EXAMPLE_GENERATOR_OUTPUT = "example-generator-output";
 const EXAMPLE_BINARY_TARGET = "example-binary-target";
+const EXAMPLE_GENERATOR_PREVIEW_FEATURE = "fullTextSearch";
 const EXAMPLE_DATA_SOURCE_NAME = "exampleDataSource";
 const EXAMPLE_DATA_SOURCE_PROVIDER = DataSourceProvider.MySQL;
 const EXAMPLE_DATA_SOURCE_URL = "mysql://example.com";
@@ -409,6 +410,18 @@ describe("printGenerator", () => {
       `generator ${EXAMPLE_GENERATOR_NAME} {
   provider = "${EXAMPLE_GENERATOR_PROVIDER}"
   binaryTargets = ["${EXAMPLE_BINARY_TARGET}"]
+}`,
+    ],
+    [
+      "With preview features",
+      createGenerator({
+        name: EXAMPLE_GENERATOR_NAME,
+        provider: EXAMPLE_GENERATOR_PROVIDER,
+        previewFeatures: [EXAMPLE_GENERATOR_PREVIEW_FEATURE],
+      }),
+      `generator ${EXAMPLE_GENERATOR_NAME} {
+  provider = "${EXAMPLE_GENERATOR_PROVIDER}"
+  previewFeatures = ["${EXAMPLE_GENERATOR_PREVIEW_FEATURE}"]
 }`,
     ],
   ];

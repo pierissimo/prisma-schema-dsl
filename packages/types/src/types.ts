@@ -32,6 +32,20 @@ export type DataSource = {
   url: string | DataSourceURLEnv;
 };
 
+export type PreviewFeature =
+  | "fullTextSearch"
+  | "fullTextIndex"
+  | "metrics"
+  | "orderByNulls"
+  | "tracing"
+  | "filteredRelationCount"
+  | "fieldReference"
+  | "multiSchema"
+  | "postgresqlExtensions"
+  | "deno"
+  | "extendedWhereUnique"
+  | "clientExtensions"
+  | "views";
 /**
  * Prisma's Schema generator
  * @see https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-schema/generators
@@ -42,6 +56,7 @@ export type Generator = {
   output?: string | null;
   /** @see https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-schema/generators#binary-targets */
   binaryTargets?: string[];
+  previewFeatures?: Array<PreviewFeature>;
 };
 
 /**
