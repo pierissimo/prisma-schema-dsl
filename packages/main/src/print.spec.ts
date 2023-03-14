@@ -14,6 +14,8 @@ import {
   printField,
   printGenerator,
   printModel,
+  printModelFullTextIndexes,
+  printModelIndexes,
   printModelMap,
 } from "./print";
 import {
@@ -67,6 +69,7 @@ const EXAMPLE_DATA_SOURCE_PROVIDER = DataSourceProvider.MySQL;
 const EXAMPLE_DATA_SOURCE_URL = "mysql://example.com";
 const EXAMPLE_RELATION_NAME = "exampleRelationName";
 const EXAMPLE_MODEL_MAP = "ExampleMappedName";
+const EXAMPLE_MODEL_SINGLE_INDEX = "example-field-name-for-index";
 const POSTGRES_SQL_PROVIDER = DataSourceProvider.PostgreSQL;
 
 describe("printEnum", () => {
@@ -367,6 +370,125 @@ ${printField(EXAMPLE_OTHER_STRING_FIELD, POSTGRES_SQL_PROVIDER)}
 ${printField(EXAMPLE_STRING_FIELD, POSTGRES_SQL_PROVIDER)}
 
 ${printModelMap(EXAMPLE_MODEL_MAP)}
+}`,
+    ],
+    [
+      "Two fields and one index",
+      createModel({
+        name: EXAMPLE_MODEL_NAME,
+        fields: [EXAMPLE_STRING_FIELD, EXAMPLE_OTHER_STRING_FIELD],
+        documentation: "",
+        indexes: [{ fields: [{ name: EXAMPLE_FIELD_NAME, sort: "asc" }] }],
+      }),
+      `model ${EXAMPLE_MODEL_NAME} {
+${printField(EXAMPLE_STRING_FIELD, POSTGRES_SQL_PROVIDER)}
+${printField(EXAMPLE_OTHER_STRING_FIELD, POSTGRES_SQL_PROVIDER)}
+
+${printModelIndexes([{ fields: [{ name: EXAMPLE_FIELD_NAME, sort: "asc" }] }])}
+}`,
+    ],
+    [
+      "Two fields and two indexes",
+      createModel({
+        name: EXAMPLE_MODEL_NAME,
+        fields: [EXAMPLE_STRING_FIELD, EXAMPLE_OTHER_STRING_FIELD],
+        documentation: "",
+        indexes: [
+          {
+            fields: [
+              { name: EXAMPLE_FIELD_NAME, sort: "desc" },
+              { name: EXAMPLE_FIELD_NAME, sort: "asc" },
+            ],
+          },
+        ],
+      }),
+      `model ${EXAMPLE_MODEL_NAME} {
+${printField(EXAMPLE_STRING_FIELD, POSTGRES_SQL_PROVIDER)}
+${printField(EXAMPLE_OTHER_STRING_FIELD, POSTGRES_SQL_PROVIDER)}
+
+${printModelIndexes([
+  {
+    fields: [
+      { name: EXAMPLE_FIELD_NAME, sort: "desc" },
+      { name: EXAMPLE_FIELD_NAME, sort: "asc" },
+    ],
+  },
+])}
+}`,
+    ],
+    [
+      "Two fields and one full text index",
+      createModel({
+        name: EXAMPLE_MODEL_NAME,
+        fields: [EXAMPLE_STRING_FIELD, EXAMPLE_OTHER_STRING_FIELD],
+        documentation: "",
+        fullTextIndexes: [{ fields: [{ name: EXAMPLE_FIELD_NAME }] }],
+      }),
+      `model ${EXAMPLE_MODEL_NAME} {
+${printField(EXAMPLE_STRING_FIELD, POSTGRES_SQL_PROVIDER)}
+${printField(EXAMPLE_OTHER_STRING_FIELD, POSTGRES_SQL_PROVIDER)}
+
+${printModelFullTextIndexes([{ fields: [{ name: EXAMPLE_FIELD_NAME }] }])}
+}`,
+    ],
+    [
+      "Two fields and two full text indexes",
+      createModel({
+        name: EXAMPLE_MODEL_NAME,
+        fields: [EXAMPLE_STRING_FIELD, EXAMPLE_OTHER_STRING_FIELD],
+        documentation: "",
+        fullTextIndexes: [
+          {
+            fields: [
+              { name: EXAMPLE_FIELD_NAME },
+              { name: EXAMPLE_FIELD_NAME },
+            ],
+          },
+        ],
+      }),
+      `model ${EXAMPLE_MODEL_NAME} {
+${printField(EXAMPLE_STRING_FIELD, POSTGRES_SQL_PROVIDER)}
+${printField(EXAMPLE_OTHER_STRING_FIELD, POSTGRES_SQL_PROVIDER)}
+
+${printModelFullTextIndexes([
+  {
+    fields: [{ name: EXAMPLE_FIELD_NAME }, { name: EXAMPLE_FIELD_NAME }],
+  },
+])}
+}`,
+    ],
+    [
+      "Two fields, one index and one full text index",
+      createModel({
+        name: EXAMPLE_MODEL_NAME,
+        fields: [EXAMPLE_STRING_FIELD, EXAMPLE_OTHER_STRING_FIELD],
+        documentation: "",
+        indexes: [
+          {
+            fields: [{ name: EXAMPLE_FIELD_NAME, sort: "asc" }],
+          },
+        ],
+        fullTextIndexes: [
+          {
+            fields: [{ name: EXAMPLE_FIELD_NAME }],
+          },
+        ],
+      }),
+      `model ${EXAMPLE_MODEL_NAME} {
+${printField(EXAMPLE_STRING_FIELD, POSTGRES_SQL_PROVIDER)}
+${printField(EXAMPLE_OTHER_STRING_FIELD, POSTGRES_SQL_PROVIDER)}
+
+${printModelIndexes([
+  {
+    fields: [{ name: EXAMPLE_FIELD_NAME, sort: "asc" }],
+  },
+])}
+
+${printModelFullTextIndexes([
+  {
+    fields: [{ name: EXAMPLE_FIELD_NAME }],
+  },
+])}
 }`,
     ],
   ];

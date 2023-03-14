@@ -6,7 +6,9 @@ import {
   DataSourceURLEnv,
   Enum,
   FieldKind,
+  FullTextIndex,
   Generator,
+  Index,
   isCallExpression,
   isDataSourceURLEnv,
   Model,
@@ -137,10 +139,14 @@ export function printModel(
     .map((field) => printField(field, provider))
     .join("\n");
   const map = model.map ? printModelMap(model.map, true) : "";
+  const indexes = model.indexes ? printModelIndexes(model.indexes, true) : "";
+  const fullTextIndexes = model.fullTextIndexes
+    ? printModelFullTextIndexes(model.fullTextIndexes, true)
+    : "";
 
   return withDocumentation(
     model.documentation,
-    `model ${model.name} {\n${fieldTexts}${map}\n}`
+    `model ${model.name} {\n${fieldTexts}${map}${indexes}${fullTextIndexes}\n}`
   );
 }
 
@@ -281,4 +287,53 @@ export function printModelMap(name: string, prependNewLines = false) {
   const prefix = prependNewLines ? "\n\n" : "";
 
   return `${prefix}@@map("${name}")`;
+}
+
+export function printModelIndexes(
+  indexes: Array<Index>,
+  prependNewLines = false
+) {
+  const prefix = prependNewLines ? "\n\n" : "";
+
+  return indexes
+    .map((index) => {
+      const fieldList = index.fields.map((field) => {
+        let f = field.name;
+        const fieldArgs = safeMergeArguments([
+          field.sort
+            ? `sort: ${
+                field.sort.charAt(0).toUpperCase() + field.sort.slice(1)
+              }`
+            : "",
+        ]);
+
+        f += fieldArgs ? `(${fieldArgs})` : "";
+        return f;
+      });
+
+      const fields = `fields: [${fieldList}]`;
+
+      return `${prefix}@@index(${fields})`;
+    })
+    .join("\n");
+}
+
+export function printModelFullTextIndexes(
+  fullTextIndexes: Array<FullTextIndex>,
+  prependNewLines = false
+) {
+  const prefix = prependNewLines ? "\n\n" : "";
+
+  return fullTextIndexes
+    .map((index) => {
+      const fields = `fields: [${index.fields.map((f) => f.name).join(", ")}]`;
+      const args = safeMergeArguments([fields]);
+
+      return `${prefix}@@fulltext(${args})`;
+    })
+    .join("\n");
+}
+
+function safeMergeArguments(args: Array<string | null | undefined>) {
+  return args.filter((a) => !!a).join(", ");
 }

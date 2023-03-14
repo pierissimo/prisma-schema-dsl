@@ -6,7 +6,9 @@ import {
   DataSourceURLEnv,
   Enum,
   FieldKind,
+  FullTextIndex,
   Generator,
+  Index,
   isCallExpression,
   Model,
   NOW,
@@ -68,11 +70,15 @@ export function createModel({
   fields,
   documentation,
   map,
+  indexes,
+  fullTextIndexes,
 }: {
   name: string;
   fields: Array<ScalarField | ObjectField>;
   documentation?: string;
   map?: string;
+  indexes?: Array<Index>;
+  fullTextIndexes?: Array<FullTextIndex>;
 }): Model {
   validateName(name);
   return {
@@ -80,6 +86,8 @@ export function createModel({
     fields,
     documentation,
     map,
+    indexes,
+    fullTextIndexes,
   };
 }
 

@@ -154,6 +154,14 @@ export type ObjectField = BaseField & {
   relationOnUpdate?: ReferentialActions;
 };
 
+export type Index = {
+  fields: Array<{ name: string; sort?: "desc" | "asc" }>;
+};
+
+export type FullTextIndex = {
+  fields: Array<{ name: string }>;
+};
+
 export type Model = {
   name: string;
   fields: Array<ScalarField | ObjectField>;
@@ -161,6 +169,8 @@ export type Model = {
   map?: string;
   /** @see https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-schema#comments */
   documentation?: string;
+  indexes?: Array<Index>;
+  fullTextIndexes?: Array<FullTextIndex>;
 };
 
 export type Enum = {
