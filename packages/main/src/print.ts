@@ -355,7 +355,8 @@ export function printModelUniqueConstraints(
         .join(", ");
       const fields = `fields: [${fieldList}]`;
       const name = unique.name ? `name: "${unique.name}"` : null;
-      const args = safeMergeArguments([fields, name]);
+      const map = unique.map ? `map: "${unique.map}"` : null;
+      const args = safeMergeArguments([fields, name, map]);
 
       return `${prefix}@@unique(${args})`;
     })

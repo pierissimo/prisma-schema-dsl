@@ -494,6 +494,38 @@ ${printModelFullTextIndexes([
 }`,
     ],
     [
+      "One field with unique constraint and map",
+      createModel({
+        name: EXAMPLE_MODEL_NAME,
+        fields: [EXAMPLE_STRING_FIELD],
+        documentation: "",
+        uniqueConstraints: [
+          {
+            fields: [
+              {
+                name: EXAMPLE_FIELD_NAME,
+              },
+            ],
+            map: `${EXAMPLE_FIELD_NAME}_map`,
+          },
+        ],
+      }),
+      `model ${EXAMPLE_MODEL_NAME} {
+${printField(EXAMPLE_STRING_FIELD, POSTGRES_SQL_PROVIDER)}
+
+${printModelUniqueConstraints([
+  {
+    fields: [
+      {
+        name: EXAMPLE_FIELD_NAME,
+      },
+    ],
+    map: `${EXAMPLE_FIELD_NAME}_map`,
+  },
+])}
+}`,
+    ],
+    [
       "Two fields with unique constraint",
       createModel({
         name: EXAMPLE_MODEL_NAME,
