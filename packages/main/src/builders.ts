@@ -19,6 +19,7 @@ import {
   ScalarFieldDefault,
   ScalarType,
   Schema,
+  UniqueConstraint,
   UUID,
 } from "@pmaltese/prisma-schema-dsl-types";
 
@@ -72,6 +73,7 @@ export function createModel({
   map,
   indexes,
   fullTextIndexes,
+  uniqueConstraints,
 }: {
   name: string;
   fields: Array<ScalarField | ObjectField>;
@@ -79,6 +81,7 @@ export function createModel({
   map?: string;
   indexes?: Array<Index>;
   fullTextIndexes?: Array<FullTextIndex>;
+  uniqueConstraints?: Array<UniqueConstraint>;
 }): Model {
   validateName(name);
   return {
@@ -88,6 +91,7 @@ export function createModel({
     map,
     indexes,
     fullTextIndexes,
+    uniqueConstraints,
   };
 }
 

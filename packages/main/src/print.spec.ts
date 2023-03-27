@@ -17,6 +17,7 @@ import {
   printModelFullTextIndexes,
   printModelIndexes,
   printModelMap,
+  printModelUniqueConstraints,
 } from "./print";
 import {
   AUTO_INCREMENT,
@@ -38,6 +39,7 @@ const EXAMPLE_ENUM_NAME = "ExampleEnumName";
 const EXAMPLE_ENUM_VALUE = "ExampleEnumValue";
 const EXAMPLE_OTHER_ENUM_VALUE = "ExampleOtherEnumValue";
 const EXAMPLE_FIELD_NAME = "exampleFieldName";
+const EXAMPLE_OTHER_FIELD_NAME = "exampleOtherFieldName";
 const EXAMPLE_RELATION_FIELD_NAME = "exampleRelationFieldName";
 const EXAMPLE_RELATION_REFERENCE_FIELD_NAME =
   "exampleRelationReferenceFieldName";
@@ -48,7 +50,7 @@ const EXAMPLE_STRING_FIELD = createScalarField({
   isRequired: true,
 });
 const EXAMPLE_OTHER_STRING_FIELD = createScalarField({
-  name: "exampleOtherFieldName",
+  name: EXAMPLE_OTHER_FIELD_NAME,
   type: ScalarType.String,
   isList: false,
   isRequired: true,
@@ -491,6 +493,45 @@ ${printModelFullTextIndexes([
 ])}
 }`,
     ],
+    [
+      "Two fields with unique constraint",
+      createModel({
+        name: EXAMPLE_MODEL_NAME,
+        fields: [EXAMPLE_STRING_FIELD, EXAMPLE_OTHER_STRING_FIELD],
+        documentation: "",
+        uniqueConstraints: [
+          {
+            fields: [
+              {
+                name: EXAMPLE_FIELD_NAME,
+                sort: "asc",
+              },
+              {
+                name: EXAMPLE_OTHER_FIELD_NAME,
+              },
+            ],
+          },
+        ],
+      }),
+      `model ${EXAMPLE_MODEL_NAME} {
+${printField(EXAMPLE_STRING_FIELD, POSTGRES_SQL_PROVIDER)}
+${printField(EXAMPLE_OTHER_STRING_FIELD, POSTGRES_SQL_PROVIDER)}
+
+${printModelUniqueConstraints([
+  {
+    fields: [
+      {
+        name: EXAMPLE_FIELD_NAME,
+        sort: "asc",
+      },
+      {
+        name: EXAMPLE_OTHER_FIELD_NAME,
+      },
+    ],
+  },
+])}
+}`,
+    ],
   ];
   test.each(cases)("%s", (name, model, expected) => {
     expect(printModel(model, POSTGRES_SQL_PROVIDER)).toBe(expected);
@@ -652,6 +693,6 @@ model Order {
     ],
   ];
   test.each(cases)("print(%s)", async (name, schema, expected) => {
-    expect(await await print(schema)).toBe(expected + "\n");
+    expect(await print(schema)).toBe(expected + "\n");
   });
 });

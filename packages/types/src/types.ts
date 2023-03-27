@@ -157,10 +157,17 @@ export type ObjectField = BaseField & {
 
 export type Index = {
   fields: Array<{ name: string; sort?: "desc" | "asc" }>;
+  isUnique?: boolean;
 };
 
 export type FullTextIndex = {
   fields: Array<{ name: string }>;
+};
+
+export type UniqueConstraint = {
+  fields: Array<{ name: string; sort?: "desc" | "asc" }>;
+  name?: string;
+  map?: string;
 };
 
 export type Model = {
@@ -172,6 +179,7 @@ export type Model = {
   documentation?: string;
   indexes?: Array<Index>;
   fullTextIndexes?: Array<FullTextIndex>;
+  uniqueConstraints?: Array<UniqueConstraint>;
 };
 
 export type Enum = {

@@ -17,6 +17,7 @@ import {
   ScalarField,
   ScalarFieldDefault,
   Schema,
+  UniqueConstraint,
 } from "@pmaltese/prisma-schema-dsl-types";
 import { formatSchema } from "@prisma/internals";
 
@@ -147,9 +148,13 @@ export function printModel(
     ? printModelFullTextIndexes(model.fullTextIndexes, true)
     : "";
 
+  const uniqueConstraints = model.uniqueConstraints
+    ? printModelUniqueConstraints(model.uniqueConstraints, true)
+    : "";
+
   return withDocumentation(
     model.documentation,
-    `model ${model.name} {\n${fieldTexts}${map}${indexes}${fullTextIndexes}\n}`
+    `model ${model.name} {\n${fieldTexts}${map}${indexes}${fullTextIndexes}${uniqueConstraints}\n}`
   );
 }
 
@@ -303,11 +308,7 @@ export function printModelIndexes(
       const fieldList = index.fields.map((field) => {
         let f = field.name;
         const fieldArgs = safeMergeArguments([
-          field.sort
-            ? `sort: ${
-                field.sort.charAt(0).toUpperCase() + field.sort.slice(1)
-              }`
-            : "",
+          field.sort ? `sort: ${parseSort(field.sort)}` : "",
         ]);
 
         f += fieldArgs ? `(${fieldArgs})` : "";
@@ -337,6 +338,34 @@ export function printModelFullTextIndexes(
     .join("\n");
 }
 
+export function printModelUniqueConstraints(
+  uniqueConstraints: Array<UniqueConstraint>,
+  prependNewLines = false
+) {
+  const prefix = prependNewLines ? "\n\n" : "";
+
+  return uniqueConstraints
+    .map((unique) => {
+      const fieldList = unique.fields
+        .map((field) => {
+          const fieldName = field.name;
+          const sort = field.sort ? `(sort: ${parseSort(field.sort)})` : "";
+          return `${fieldName}${sort}`;
+        })
+        .join(", ");
+      const fields = `fields: [${fieldList}]`;
+      const name = unique.name ? `name: "${unique.name}"` : null;
+      const args = safeMergeArguments([fields, name]);
+
+      return `${prefix}@@unique(${args})`;
+    })
+    .join("\n");
+}
+
 function safeMergeArguments(args: Array<string | null | undefined>) {
   return args.filter((a) => !!a).join(", ");
+}
+
+function parseSort(sort: string) {
+  return sort.charAt(0).toUpperCase() + sort.slice(1);
 }
