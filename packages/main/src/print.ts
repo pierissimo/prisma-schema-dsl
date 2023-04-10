@@ -47,6 +47,10 @@ export async function print(schema: Schema): Promise<string> {
     ...schema.models.map((model) => printModel(model, providerType))
   );
   statements.push(...schema.enums.map(printEnum));
+  statements.push(
+    ...(schema.views ?? []).map((view) => printView(view, providerType))
+  );
+
   const schemaText = statements.join("\n");
   return formatSchema({ schema: schemaText });
 }

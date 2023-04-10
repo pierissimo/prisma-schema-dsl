@@ -195,4 +195,5 @@ export type Schema = {
   enums: Enum[];
   dataSource?: DataSource;
   generators: Generator[];
+  views?: View[];
 };
