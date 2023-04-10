@@ -24,15 +24,9 @@ import {
   AUTO_INCREMENT,
   CUID,
   DataSourceProvider,
-  Generator,
-  Model,
   NOW,
-  ObjectField,
-  ScalarField,
   ScalarType,
-  Schema,
   UUID,
-  View,
 } from "@pmaltese/prisma-schema-dsl-types";
 
 const EXAMPLE_DOCUMENTATION = "Example Documentation";
@@ -75,17 +69,17 @@ const EXAMPLE_MODEL_SINGLE_INDEX = "example-field-name-for-index";
 const POSTGRES_SQL_PROVIDER = DataSourceProvider.PostgreSQL;
 
 describe("printEnum", () => {
-  test("printEnum - Single value", () => {
-    const enum_ = createEnum({
+  test("single value", () => {
+    const theEnum = createEnum({
       name: EXAMPLE_ENUM_NAME,
       values: [EXAMPLE_ENUM_VALUE],
     });
     const expected = `enum ${EXAMPLE_ENUM_NAME} {\n${EXAMPLE_ENUM_VALUE}\n}`;
-    expect(printEnum(enum_)).toBe(expected);
+    expect(printEnum(theEnum)).toBe(expected);
   });
 
-  test("printEnum - Single value with documentation", () => {
-    const enum_ = createEnum({
+  test("single value with documentation", () => {
+    const theEnum = createEnum({
       name: EXAMPLE_ENUM_NAME,
       values: [EXAMPLE_ENUM_VALUE],
       documentation: EXAMPLE_DOCUMENTATION,
@@ -93,315 +87,343 @@ describe("printEnum", () => {
     const expected = `${printDocumentation(
       EXAMPLE_DOCUMENTATION
     )}\nenum ${EXAMPLE_ENUM_NAME} {\n${EXAMPLE_ENUM_VALUE}\n}`;
-    expect(printEnum(enum_)).toBe(expected);
+    expect(printEnum(theEnum)).toBe(expected);
   });
 
-  test("printEnum - Two values", () => {
-    const enum_ = createEnum({
+  test("two values", () => {
+    const theEnum = createEnum({
       name: EXAMPLE_ENUM_NAME,
       values: [EXAMPLE_ENUM_VALUE, EXAMPLE_OTHER_ENUM_VALUE],
     });
     const expected = `enum ${EXAMPLE_ENUM_NAME} {\n${EXAMPLE_ENUM_VALUE}\n${EXAMPLE_OTHER_ENUM_VALUE}\n}`;
-    expect(printEnum(enum_)).toBe(expected);
+    expect(printEnum(theEnum)).toBe(expected);
   });
 });
 
 describe("printField", () => {
-  const cases: Array<[string, ObjectField | ScalarField, string]> = [
-    [
-      "Simple string field",
-      EXAMPLE_STRING_FIELD,
-      `${EXAMPLE_FIELD_NAME} ${ScalarType.String}`,
-    ],
-    [
-      "Simple string field with documentation",
-      createScalarField({
-        name: EXAMPLE_FIELD_NAME,
-        type: ScalarType.String,
-        isList: false,
-        isRequired: true,
-        isUnique: false,
-        isId: false,
-        isUpdatedAt: false,
-        defaultValue: undefined,
-        documentation: EXAMPLE_DOCUMENTATION,
-      }),
+  test("simple string field", () => {
+    const result = printField(EXAMPLE_STRING_FIELD, POSTGRES_SQL_PROVIDER);
+    expect(result).toEqual(`${EXAMPLE_FIELD_NAME} ${ScalarType.String}`);
+  });
+
+  test("simple string field with documentation", () => {
+    const fieldWithDoc = createScalarField({
+      name: EXAMPLE_FIELD_NAME,
+      type: ScalarType.String,
+      isList: false,
+      isRequired: true,
+      isUnique: false,
+      isId: false,
+      isUpdatedAt: false,
+      defaultValue: undefined,
+      documentation: EXAMPLE_DOCUMENTATION,
+    });
+    const result = printField(fieldWithDoc, POSTGRES_SQL_PROVIDER);
+    expect(result).toEqual(
       `${printDocumentation(EXAMPLE_DOCUMENTATION)}\n${EXAMPLE_FIELD_NAME} ${
         ScalarType.String
-      }`,
-    ],
-    [
-      "Simple float field",
-      createScalarField({
-        name: EXAMPLE_FIELD_NAME,
-        type: ScalarType.Float,
-        isList: false,
-        isRequired: true,
-      }),
-      `${EXAMPLE_FIELD_NAME} ${ScalarType.Float}`,
-    ],
-    [
-      "Simple optional string field",
-      createScalarField({
-        name: EXAMPLE_FIELD_NAME,
-        type: ScalarType.String,
-        isRequired: false,
-        isUnique: false,
-      }),
-      `${EXAMPLE_FIELD_NAME} ${ScalarType.String}?`,
-    ],
-    [
-      "Simple string array field",
-      createScalarField({
-        name: EXAMPLE_FIELD_NAME,
-        type: ScalarType.String,
-        isList: true,
-        isRequired: true,
-      }),
-      `${EXAMPLE_FIELD_NAME} ${ScalarType.String}[]`,
-    ],
-    [
-      "Simple date-time field",
-      createScalarField({
-        name: EXAMPLE_FIELD_NAME,
-        type: ScalarType.DateTime,
-        isList: false,
-        isRequired: true,
-        isUnique: false,
-        isId: false,
-        isUpdatedAt: false,
-      }),
-      `${EXAMPLE_FIELD_NAME} ${ScalarType.DateTime}`,
-    ],
-    [
-      "Int field with default",
-      createScalarField({
-        name: EXAMPLE_FIELD_NAME,
-        type: ScalarType.Int,
-        isList: false,
-        isRequired: true,
-        isUnique: false,
-        isId: false,
-        isUpdatedAt: false,
-        defaultValue: 42,
-      }),
-      `${EXAMPLE_FIELD_NAME} ${ScalarType.Int} @default(42)`,
-    ],
-    [
-      "Int field with autoincrement()",
-      createScalarField({
-        name: EXAMPLE_FIELD_NAME,
-        type: ScalarType.Int,
-        isList: false,
-        isRequired: true,
-        isUnique: false,
-        isId: false,
-        isUpdatedAt: false,
-        defaultValue: { callee: AUTO_INCREMENT },
-      }),
-      `${EXAMPLE_FIELD_NAME} ${ScalarType.Int} @default(autoincrement())`,
-    ],
-    [
-      "String field with uuid()",
-      createScalarField({
-        name: EXAMPLE_FIELD_NAME,
-        type: ScalarType.String,
-        isList: false,
-        isRequired: true,
-        isUnique: false,
-        isId: false,
-        isUpdatedAt: false,
-        defaultValue: { callee: UUID },
-      }),
-      `${EXAMPLE_FIELD_NAME} ${ScalarType.String} @default(uuid())`,
-    ],
-    [
-      "String field with cuid()",
-      createScalarField({
-        name: EXAMPLE_FIELD_NAME,
-        type: ScalarType.String,
-        isList: false,
-        isRequired: true,
-        isUnique: false,
-        isId: false,
-        isUpdatedAt: false,
-        defaultValue: { callee: CUID },
-      }),
-      `${EXAMPLE_FIELD_NAME} ${ScalarType.String} @default(cuid())`,
-    ],
-    [
-      "Date-time field with now()",
-      createScalarField({
-        name: EXAMPLE_FIELD_NAME,
-        type: ScalarType.DateTime,
-        isList: false,
-        isRequired: true,
-        isUnique: false,
-        isId: false,
-        isUpdatedAt: false,
-        defaultValue: { callee: NOW },
-      }),
-      `${EXAMPLE_FIELD_NAME} ${ScalarType.DateTime} @default(now())`,
-    ],
-    [
-      "Boolean field with default value",
-      createScalarField({
-        name: EXAMPLE_FIELD_NAME,
-        type: ScalarType.Boolean,
-        isList: false,
-        isRequired: true,
-        isUnique: false,
-        isId: false,
-        isUpdatedAt: false,
-        defaultValue: true,
-      }),
-      `${EXAMPLE_FIELD_NAME} ${ScalarType.Boolean} @default(true)`,
-    ],
-    [
-      "Simple object field",
-      createObjectField({
-        name: EXAMPLE_FIELD_NAME,
-        type: EXAMPLE_OBJECT_NAME,
-        isList: false,
-        isRequired: true,
-      }),
-      `${EXAMPLE_FIELD_NAME} ${EXAMPLE_OBJECT_NAME}`,
-    ],
-    [
-      "Object field with relation",
-      createObjectField({
-        name: EXAMPLE_FIELD_NAME,
-        type: EXAMPLE_OBJECT_NAME,
-        isList: false,
-        isRequired: true,
-        relationName: EXAMPLE_RELATION_NAME,
-      }),
-      `${EXAMPLE_FIELD_NAME} ${EXAMPLE_OBJECT_NAME} @relation(name: "${EXAMPLE_RELATION_NAME}")`,
-    ],
-    [
-      "Object field with fields",
-      createObjectField({
-        name: EXAMPLE_FIELD_NAME,
-        type: EXAMPLE_OBJECT_NAME,
-        isList: false,
-        isRequired: true,
-        relationName: null,
-        relationFields: [EXAMPLE_RELATION_FIELD_NAME],
-      }),
-      `${EXAMPLE_FIELD_NAME} ${EXAMPLE_OBJECT_NAME} @relation(fields: [${EXAMPLE_RELATION_FIELD_NAME}])`,
-    ],
-    [
-      "Object field with references",
-      createObjectField({
-        name: EXAMPLE_FIELD_NAME,
-        type: EXAMPLE_OBJECT_NAME,
-        isList: false,
-        isRequired: true,
-        relationName: null,
-        relationFields: [],
-        relationReferences: [EXAMPLE_RELATION_REFERENCE_FIELD_NAME],
-      }),
-      `${EXAMPLE_FIELD_NAME} ${EXAMPLE_OBJECT_NAME} @relation(references: [${EXAMPLE_RELATION_REFERENCE_FIELD_NAME}])`,
-    ],
-    [
-      "Object field with full relation",
-      createObjectField({
-        name: EXAMPLE_FIELD_NAME,
-        type: EXAMPLE_OBJECT_NAME,
-        isList: false,
-        isRequired: true,
-        relationName: EXAMPLE_RELATION_NAME,
-        relationFields: [EXAMPLE_RELATION_FIELD_NAME],
-        relationReferences: [EXAMPLE_RELATION_REFERENCE_FIELD_NAME],
-      }),
-      `${EXAMPLE_FIELD_NAME} ${EXAMPLE_OBJECT_NAME} @relation(name: "${EXAMPLE_RELATION_NAME}", fields: [${EXAMPLE_RELATION_FIELD_NAME}], references: [${EXAMPLE_RELATION_REFERENCE_FIELD_NAME}])`,
-    ],
-  ];
-  test.each(cases)("%s", (name, field, expected) => {
+      }`
+    );
+  });
+
+  test("simple float field", () => {
+    const floatField = createScalarField({
+      name: EXAMPLE_FIELD_NAME,
+      type: ScalarType.Float,
+      isList: false,
+      isRequired: true,
+    });
+    const result = printField(floatField, POSTGRES_SQL_PROVIDER);
+    expect(result).toEqual(`${EXAMPLE_FIELD_NAME} ${ScalarType.Float}`);
+  });
+
+  test("simple optional fields", () => {
+    const field = createScalarField({
+      name: EXAMPLE_FIELD_NAME,
+      type: ScalarType.String,
+      isRequired: false,
+      isUnique: false,
+    });
+    expect(printField(field, POSTGRES_SQL_PROVIDER)).toBe(
+      `${EXAMPLE_FIELD_NAME} ${ScalarType.String}?`
+    );
+  });
+
+  test("simple required fields: string", () => {
+    const field = createScalarField({
+      name: EXAMPLE_FIELD_NAME,
+      type: ScalarType.String,
+      isRequired: true,
+      isUnique: false,
+    });
+    expect(printField(field, POSTGRES_SQL_PROVIDER)).toBe(
+      `${EXAMPLE_FIELD_NAME} ${ScalarType.String}`
+    );
+  });
+
+  test("simple required fields: int", () => {
+    const field = createScalarField({
+      name: EXAMPLE_FIELD_NAME,
+      type: ScalarType.Int,
+      isRequired: true,
+      isUnique: false,
+    });
+    expect(printField(field, POSTGRES_SQL_PROVIDER)).toBe(
+      `${EXAMPLE_FIELD_NAME} ${ScalarType.Int}`
+    );
+  });
+
+  test("simple array fields", () => {
+    const field = createScalarField({
+      name: EXAMPLE_FIELD_NAME,
+      type: ScalarType.String,
+      isList: true,
+      isRequired: true,
+    });
+    expect(printField(field, POSTGRES_SQL_PROVIDER)).toBe(
+      `${EXAMPLE_FIELD_NAME} ${ScalarType.String}[]`
+    );
+  });
+
+  test("datetime fields", () => {
+    const field = createScalarField({
+      name: EXAMPLE_FIELD_NAME,
+      type: ScalarType.DateTime,
+      isList: false,
+      isRequired: true,
+      isUnique: false,
+      isId: false,
+      isUpdatedAt: false,
+    });
+    expect(printField(field, POSTGRES_SQL_PROVIDER)).toBe(
+      `${EXAMPLE_FIELD_NAME} ${ScalarType.DateTime}`
+    );
+  });
+
+  test("default value: int with default", () => {
+    const field = createScalarField({
+      name: EXAMPLE_FIELD_NAME,
+      type: ScalarType.Int,
+      isRequired: true,
+      defaultValue: 42,
+    });
+    expect(printField(field, POSTGRES_SQL_PROVIDER)).toBe(
+      `${EXAMPLE_FIELD_NAME} ${ScalarType.Int} @default(42)`
+    );
+  });
+
+  test("default value: int with autoincrement()", () => {
+    const field = createScalarField({
+      name: EXAMPLE_FIELD_NAME,
+      type: ScalarType.Int,
+      isRequired: true,
+      defaultValue: { callee: AUTO_INCREMENT },
+    });
+    expect(printField(field, POSTGRES_SQL_PROVIDER)).toBe(
+      `${EXAMPLE_FIELD_NAME} ${ScalarType.Int} @default(autoincrement())`
+    );
+  });
+
+  test("default value: string with uuid()", () => {
+    const field = createScalarField({
+      name: EXAMPLE_FIELD_NAME,
+      type: ScalarType.String,
+      isRequired: true,
+      defaultValue: { callee: UUID },
+    });
+    expect(printField(field, POSTGRES_SQL_PROVIDER)).toBe(
+      `${EXAMPLE_FIELD_NAME} ${ScalarType.String} @default(uuid())`
+    );
+  });
+
+  test("default value: string with cuid()", () => {
+    const field = createScalarField({
+      name: EXAMPLE_FIELD_NAME,
+      type: ScalarType.String,
+      isRequired: true,
+      defaultValue: { callee: CUID },
+    });
+    expect(printField(field, POSTGRES_SQL_PROVIDER)).toBe(
+      `${EXAMPLE_FIELD_NAME} ${ScalarType.String} @default(cuid())`
+    );
+  });
+
+  test("default value: datetime with now()", () => {
+    const field = createScalarField({
+      name: EXAMPLE_FIELD_NAME,
+      type: ScalarType.DateTime,
+      isRequired: true,
+      defaultValue: { callee: NOW },
+    });
+    expect(printField(field, POSTGRES_SQL_PROVIDER)).toBe(
+      `${EXAMPLE_FIELD_NAME} ${ScalarType.DateTime} @default(now())`
+    );
+  });
+
+  test("boolean field with default value", () => {
+    const field = createScalarField({
+      name: EXAMPLE_FIELD_NAME,
+      type: ScalarType.Boolean,
+      isList: false,
+      isRequired: true,
+      isUnique: false,
+      isId: false,
+      isUpdatedAt: false,
+      defaultValue: true,
+    });
+    const expected = `${EXAMPLE_FIELD_NAME} ${ScalarType.Boolean} @default(true)`;
+    expect(printField(field, POSTGRES_SQL_PROVIDER)).toBe(expected);
+  });
+
+  test("simple object field", () => {
+    const field = createObjectField({
+      name: EXAMPLE_FIELD_NAME,
+      type: EXAMPLE_OBJECT_NAME,
+      isList: false,
+      isRequired: true,
+    });
+    const expected = `${EXAMPLE_FIELD_NAME} ${EXAMPLE_OBJECT_NAME}`;
+    expect(printField(field, POSTGRES_SQL_PROVIDER)).toBe(expected);
+  });
+
+  test("object field with relation", () => {
+    const field = createObjectField({
+      name: EXAMPLE_FIELD_NAME,
+      type: EXAMPLE_OBJECT_NAME,
+      isList: false,
+      isRequired: true,
+      relationName: EXAMPLE_RELATION_NAME,
+    });
+    const expected = `${EXAMPLE_FIELD_NAME} ${EXAMPLE_OBJECT_NAME} @relation(name: "${EXAMPLE_RELATION_NAME}")`;
+    expect(printField(field, POSTGRES_SQL_PROVIDER)).toBe(expected);
+  });
+
+  test("object field with fields", () => {
+    const field = createObjectField({
+      name: EXAMPLE_FIELD_NAME,
+      type: EXAMPLE_OBJECT_NAME,
+      isList: false,
+      isRequired: true,
+      relationName: null,
+      relationFields: [EXAMPLE_RELATION_FIELD_NAME],
+    });
+    const expected = `${EXAMPLE_FIELD_NAME} ${EXAMPLE_OBJECT_NAME} @relation(fields: [${EXAMPLE_RELATION_FIELD_NAME}])`;
+    expect(printField(field, POSTGRES_SQL_PROVIDER)).toBe(expected);
+  });
+
+  test("object field with references", () => {
+    const field = createObjectField({
+      name: EXAMPLE_FIELD_NAME,
+      type: EXAMPLE_OBJECT_NAME,
+      isList: false,
+      isRequired: true,
+      relationName: null,
+      relationFields: [],
+      relationReferences: [EXAMPLE_RELATION_REFERENCE_FIELD_NAME],
+    });
+    const expected = `${EXAMPLE_FIELD_NAME} ${EXAMPLE_OBJECT_NAME} @relation(references: [${EXAMPLE_RELATION_REFERENCE_FIELD_NAME}])`;
+    expect(printField(field, POSTGRES_SQL_PROVIDER)).toBe(expected);
+  });
+
+  test("object field with full relation", () => {
+    const field = createObjectField({
+      name: EXAMPLE_FIELD_NAME,
+      type: EXAMPLE_OBJECT_NAME,
+      isList: false,
+      isRequired: true,
+      relationName: EXAMPLE_RELATION_NAME,
+      relationFields: [EXAMPLE_RELATION_FIELD_NAME],
+      relationReferences: [EXAMPLE_RELATION_REFERENCE_FIELD_NAME],
+    });
+    const expected = `${EXAMPLE_FIELD_NAME} ${EXAMPLE_OBJECT_NAME} @relation(name: "${EXAMPLE_RELATION_NAME}", fields: [${EXAMPLE_RELATION_FIELD_NAME}], references: [${EXAMPLE_RELATION_REFERENCE_FIELD_NAME}])`;
     expect(printField(field, POSTGRES_SQL_PROVIDER)).toBe(expected);
   });
 });
 
 describe("printModel", () => {
-  const cases: Array<[string, Model, string]> = [
-    [
-      "Single field",
-      createModel({
-        name: EXAMPLE_MODEL_NAME,
-        fields: [EXAMPLE_STRING_FIELD],
-      }),
-      `model ${EXAMPLE_MODEL_NAME} {
+  it("single field", () => {
+    const model = createModel({
+      name: EXAMPLE_MODEL_NAME,
+      fields: [EXAMPLE_STRING_FIELD],
+    });
+    const expected = `model ${EXAMPLE_MODEL_NAME} {
 ${printField(EXAMPLE_STRING_FIELD, POSTGRES_SQL_PROVIDER)}
-}`,
-    ],
-    [
-      "Single field and documentation",
-      createModel({
-        name: EXAMPLE_MODEL_NAME,
-        fields: [EXAMPLE_STRING_FIELD],
-        documentation: EXAMPLE_DOCUMENTATION,
-      }),
-      `${printDocumentation(EXAMPLE_DOCUMENTATION)}
+}`;
+    expect(printModel(model, POSTGRES_SQL_PROVIDER)).toEqual(expected);
+  });
+
+  it("single field and documentation", () => {
+    const model = createModel({
+      name: EXAMPLE_MODEL_NAME,
+      fields: [EXAMPLE_STRING_FIELD],
+      documentation: EXAMPLE_DOCUMENTATION,
+    });
+    const expected = `${printDocumentation(EXAMPLE_DOCUMENTATION)}
 model ${EXAMPLE_MODEL_NAME} {
 ${printField(EXAMPLE_STRING_FIELD, POSTGRES_SQL_PROVIDER)}
-}`,
-    ],
-    [
-      "Two fields",
-      createModel({
-        name: EXAMPLE_MODEL_NAME,
-        fields: [EXAMPLE_STRING_FIELD, EXAMPLE_OTHER_STRING_FIELD],
-      }),
-      `model ${EXAMPLE_MODEL_NAME} {
+}`;
+    expect(printModel(model, POSTGRES_SQL_PROVIDER)).toEqual(expected);
+  });
+
+  it("two fields", () => {
+    const model = createModel({
+      name: EXAMPLE_MODEL_NAME,
+      fields: [EXAMPLE_STRING_FIELD, EXAMPLE_OTHER_STRING_FIELD],
+    });
+    const expected = `model ${EXAMPLE_MODEL_NAME} {
 ${printField(EXAMPLE_STRING_FIELD, POSTGRES_SQL_PROVIDER)}
 ${printField(EXAMPLE_OTHER_STRING_FIELD, POSTGRES_SQL_PROVIDER)}
-}`,
-    ],
-    [
-      "Single field and map",
-      createModel({
-        name: EXAMPLE_MODEL_NAME,
-        fields: [EXAMPLE_STRING_FIELD],
-        documentation: "",
-        map: EXAMPLE_MODEL_MAP,
-      }),
-      `model ${EXAMPLE_MODEL_NAME} {
+}`;
+    expect(printModel(model, POSTGRES_SQL_PROVIDER)).toEqual(expected);
+  });
+
+  it("Single field and map", () => {
+    const EXAMPLE_MODEL = createModel({
+      name: EXAMPLE_MODEL_NAME,
+      fields: [EXAMPLE_STRING_FIELD],
+      documentation: "",
+      map: EXAMPLE_MODEL_MAP,
+    });
+
+    const expected = `model ${EXAMPLE_MODEL_NAME} {
 ${printField(EXAMPLE_STRING_FIELD, POSTGRES_SQL_PROVIDER)}
 
 ${printModelMap(EXAMPLE_MODEL_MAP)}
-}`,
-    ],
-    [
-      "Two fields and one index",
-      createModel({
-        name: EXAMPLE_MODEL_NAME,
-        fields: [EXAMPLE_STRING_FIELD, EXAMPLE_OTHER_STRING_FIELD],
-        documentation: "",
-        indexes: [{ fields: [{ name: EXAMPLE_FIELD_NAME, sort: "asc" }] }],
-      }),
-      `model ${EXAMPLE_MODEL_NAME} {
+}`;
+    expect(printModel(EXAMPLE_MODEL)).toEqual(expected);
+  });
+
+  it("Two fields and one index", () => {
+    const EXAMPLE_MODEL = createModel({
+      name: EXAMPLE_MODEL_NAME,
+      fields: [EXAMPLE_STRING_FIELD, EXAMPLE_OTHER_STRING_FIELD],
+      documentation: "",
+      indexes: [{ fields: [{ name: EXAMPLE_FIELD_NAME, sort: "asc" }] }],
+    });
+    const expected = `model ${EXAMPLE_MODEL_NAME} {
 ${printField(EXAMPLE_STRING_FIELD, POSTGRES_SQL_PROVIDER)}
 ${printField(EXAMPLE_OTHER_STRING_FIELD, POSTGRES_SQL_PROVIDER)}
 
 ${printModelIndexes([{ fields: [{ name: EXAMPLE_FIELD_NAME, sort: "asc" }] }])}
-}`,
-    ],
-    [
-      "Two fields and two indexes",
-      createModel({
-        name: EXAMPLE_MODEL_NAME,
-        fields: [EXAMPLE_STRING_FIELD, EXAMPLE_OTHER_STRING_FIELD],
-        documentation: "",
-        indexes: [
-          {
-            fields: [
-              { name: EXAMPLE_FIELD_NAME, sort: "desc" },
-              { name: EXAMPLE_FIELD_NAME, sort: "asc" },
-            ],
-          },
-        ],
-      }),
-      `model ${EXAMPLE_MODEL_NAME} {
+}`;
+    expect(printModel(EXAMPLE_MODEL)).toEqual(expected);
+  });
+
+  it("two fields and two indexes", () => {
+    const EXAMPLE_MODEL = createModel({
+      name: EXAMPLE_MODEL_NAME,
+      fields: [EXAMPLE_STRING_FIELD, EXAMPLE_OTHER_STRING_FIELD],
+      documentation: "",
+      indexes: [
+        {
+          fields: [
+            { name: EXAMPLE_FIELD_NAME, sort: "desc" },
+            { name: EXAMPLE_FIELD_NAME, sort: "asc" },
+          ],
+        },
+      ],
+    });
+    const expected = `model ${EXAMPLE_MODEL_NAME} {
 ${printField(EXAMPLE_STRING_FIELD, POSTGRES_SQL_PROVIDER)}
 ${printField(EXAMPLE_OTHER_STRING_FIELD, POSTGRES_SQL_PROVIDER)}
 
@@ -413,39 +435,38 @@ ${printModelIndexes([
     ],
   },
 ])}
-}`,
-    ],
-    [
-      "Two fields and one full text index",
-      createModel({
-        name: EXAMPLE_MODEL_NAME,
-        fields: [EXAMPLE_STRING_FIELD, EXAMPLE_OTHER_STRING_FIELD],
-        documentation: "",
-        fullTextIndexes: [{ fields: [{ name: EXAMPLE_FIELD_NAME }] }],
-      }),
-      `model ${EXAMPLE_MODEL_NAME} {
+}`;
+    expect(printModel(EXAMPLE_MODEL)).toEqual(expected);
+  });
+
+  test("two fields and one full text index", () => {
+    const model = createModel({
+      name: EXAMPLE_MODEL_NAME,
+      fields: [EXAMPLE_STRING_FIELD, EXAMPLE_OTHER_STRING_FIELD],
+      documentation: "",
+      fullTextIndexes: [{ fields: [{ name: EXAMPLE_FIELD_NAME }] }],
+    });
+    const expected = `model ${EXAMPLE_MODEL_NAME} {
 ${printField(EXAMPLE_STRING_FIELD, POSTGRES_SQL_PROVIDER)}
 ${printField(EXAMPLE_OTHER_STRING_FIELD, POSTGRES_SQL_PROVIDER)}
 
 ${printModelFullTextIndexes([{ fields: [{ name: EXAMPLE_FIELD_NAME }] }])}
-}`,
-    ],
-    [
-      "Two fields and two full text indexes",
-      createModel({
-        name: EXAMPLE_MODEL_NAME,
-        fields: [EXAMPLE_STRING_FIELD, EXAMPLE_OTHER_STRING_FIELD],
-        documentation: "",
-        fullTextIndexes: [
-          {
-            fields: [
-              { name: EXAMPLE_FIELD_NAME },
-              { name: EXAMPLE_FIELD_NAME },
-            ],
-          },
-        ],
-      }),
-      `model ${EXAMPLE_MODEL_NAME} {
+}`;
+    expect(printModel(model, POSTGRES_SQL_PROVIDER)).toBe(expected);
+  });
+
+  test("two fields and two full text indexes", () => {
+    const model = createModel({
+      name: EXAMPLE_MODEL_NAME,
+      fields: [EXAMPLE_STRING_FIELD, EXAMPLE_OTHER_STRING_FIELD],
+      documentation: "",
+      fullTextIndexes: [
+        {
+          fields: [{ name: EXAMPLE_FIELD_NAME }, { name: EXAMPLE_FIELD_NAME }],
+        },
+      ],
+    });
+    const expected = `model ${EXAMPLE_MODEL_NAME} {
 ${printField(EXAMPLE_STRING_FIELD, POSTGRES_SQL_PROVIDER)}
 ${printField(EXAMPLE_OTHER_STRING_FIELD, POSTGRES_SQL_PROVIDER)}
 
@@ -454,258 +475,237 @@ ${printModelFullTextIndexes([
     fields: [{ name: EXAMPLE_FIELD_NAME }, { name: EXAMPLE_FIELD_NAME }],
   },
 ])}
-}`,
-    ],
-    [
-      "Two fields, one index and one full text index",
-      createModel({
-        name: EXAMPLE_MODEL_NAME,
-        fields: [EXAMPLE_STRING_FIELD, EXAMPLE_OTHER_STRING_FIELD],
-        documentation: "",
-        indexes: [
-          {
-            fields: [{ name: EXAMPLE_FIELD_NAME, sort: "asc" }],
-          },
-        ],
-        fullTextIndexes: [
-          {
-            fields: [{ name: EXAMPLE_FIELD_NAME }],
-          },
-        ],
-      }),
-      `model ${EXAMPLE_MODEL_NAME} {
+}`;
+    expect(printModel(model, POSTGRES_SQL_PROVIDER)).toBe(expected);
+  });
+
+  test("two fields, one index and one full text index", () => {
+    const model = createModel({
+      name: EXAMPLE_MODEL_NAME,
+      fields: [EXAMPLE_STRING_FIELD, EXAMPLE_OTHER_STRING_FIELD],
+      documentation: "",
+      indexes: [{ fields: [{ name: EXAMPLE_FIELD_NAME, sort: "asc" }] }],
+      fullTextIndexes: [{ fields: [{ name: EXAMPLE_FIELD_NAME }] }],
+    });
+    const expected = `model ${EXAMPLE_MODEL_NAME} {
 ${printField(EXAMPLE_STRING_FIELD, POSTGRES_SQL_PROVIDER)}
 ${printField(EXAMPLE_OTHER_STRING_FIELD, POSTGRES_SQL_PROVIDER)}
 
-${printModelIndexes([
-  {
-    fields: [{ name: EXAMPLE_FIELD_NAME, sort: "asc" }],
-  },
-])}
+${printModelIndexes([{ fields: [{ name: EXAMPLE_FIELD_NAME, sort: "asc" }] }])}
 
-${printModelFullTextIndexes([
-  {
-    fields: [{ name: EXAMPLE_FIELD_NAME }],
-  },
-])}
-}`,
-    ],
-  ];
-  test.each(cases)("%s", (name, model, expected) => {
+${printModelFullTextIndexes([{ fields: [{ name: EXAMPLE_FIELD_NAME }] }])}
+}`;
     expect(printModel(model, POSTGRES_SQL_PROVIDER)).toBe(expected);
   });
 });
 
 describe("printView", () => {
-  const cases: Array<[string, View, string]> = [
-    [
-      "Single field",
-      createView({
-        name: EXAMPLE_MODEL_NAME,
-        fields: [EXAMPLE_STRING_FIELD],
-      }),
-      `view ${EXAMPLE_MODEL_NAME} {
+  it("single field", () => {
+    const view = createView({
+      name: EXAMPLE_MODEL_NAME,
+      fields: [EXAMPLE_STRING_FIELD],
+    });
+    const expected = `view ${EXAMPLE_MODEL_NAME} {
 ${printField(EXAMPLE_STRING_FIELD, POSTGRES_SQL_PROVIDER)}
-}`,
-    ],
-    [
-      "Single field and documentation",
-      createView({
-        name: EXAMPLE_MODEL_NAME,
-        fields: [EXAMPLE_STRING_FIELD],
-        documentation: EXAMPLE_DOCUMENTATION,
-      }),
-      `${printDocumentation(EXAMPLE_DOCUMENTATION)}
+}`;
+    expect(printView(view, POSTGRES_SQL_PROVIDER)).toEqual(expected);
+  });
+
+  it("single field and documentation", () => {
+    const view = createView({
+      name: EXAMPLE_MODEL_NAME,
+      fields: [EXAMPLE_STRING_FIELD],
+      documentation: EXAMPLE_DOCUMENTATION,
+    });
+    const expected = `${printDocumentation(EXAMPLE_DOCUMENTATION)}
 view ${EXAMPLE_MODEL_NAME} {
 ${printField(EXAMPLE_STRING_FIELD, POSTGRES_SQL_PROVIDER)}
-}`,
-    ],
-    [
-      "Two fields",
-      createView({
-        name: EXAMPLE_MODEL_NAME,
-        fields: [EXAMPLE_STRING_FIELD, EXAMPLE_OTHER_STRING_FIELD],
-      }),
-      `view ${EXAMPLE_MODEL_NAME} {
+}`;
+    expect(printView(view, POSTGRES_SQL_PROVIDER)).toEqual(expected);
+  });
+
+  it("two fields", () => {
+    const view = createView({
+      name: EXAMPLE_MODEL_NAME,
+      fields: [EXAMPLE_STRING_FIELD, EXAMPLE_OTHER_STRING_FIELD],
+    });
+    const expected = `view ${EXAMPLE_MODEL_NAME} {
 ${printField(EXAMPLE_STRING_FIELD, POSTGRES_SQL_PROVIDER)}
 ${printField(EXAMPLE_OTHER_STRING_FIELD, POSTGRES_SQL_PROVIDER)}
-}`,
-    ],
-    [
-      "Single field and map",
-      createView({
-        name: EXAMPLE_MODEL_NAME,
-        fields: [EXAMPLE_STRING_FIELD],
-        documentation: "",
-        map: EXAMPLE_MODEL_MAP,
-      }),
-      `view ${EXAMPLE_MODEL_NAME} {
+}`;
+    expect(printView(view, POSTGRES_SQL_PROVIDER)).toEqual(expected);
+  });
+
+  it("single field and map", () => {
+    const view = createView({
+      name: EXAMPLE_MODEL_NAME,
+      fields: [EXAMPLE_STRING_FIELD],
+      documentation: "",
+      map: EXAMPLE_MODEL_MAP,
+    });
+
+    const expected = `view ${EXAMPLE_MODEL_NAME} {
 ${printField(EXAMPLE_STRING_FIELD, POSTGRES_SQL_PROVIDER)}
 
 ${printModelMap(EXAMPLE_MODEL_MAP)}
-}`,
-    ],
-  ];
-  test.each(cases)("%s", (name, view, expected) => {
-    expect(printView(view, POSTGRES_SQL_PROVIDER)).toBe(expected);
+}`;
+    expect(printView(view)).toEqual(expected);
   });
 });
 
 describe("printGenerator", () => {
-  const cases: Array<[string, Generator, string]> = [
-    [
-      "Name and provider only",
-      createGenerator({
-        name: EXAMPLE_GENERATOR_NAME,
-        provider: EXAMPLE_GENERATOR_PROVIDER,
-      }),
-      `generator ${EXAMPLE_GENERATOR_NAME} {
+  test("name and provider only", () => {
+    const generator = createGenerator({
+      name: EXAMPLE_GENERATOR_NAME,
+      provider: EXAMPLE_GENERATOR_PROVIDER,
+    });
+    const expected = `generator ${EXAMPLE_GENERATOR_NAME} {
   provider = "${EXAMPLE_GENERATOR_PROVIDER}"
-}`,
-    ],
-    [
-      "With output",
-      createGenerator({
-        name: EXAMPLE_GENERATOR_NAME,
-        provider: EXAMPLE_GENERATOR_PROVIDER,
-        output: EXAMPLE_GENERATOR_OUTPUT,
-      }),
-      `generator ${EXAMPLE_GENERATOR_NAME} {
+}`;
+    expect(printGenerator(generator)).toBe(expected);
+  });
+
+  test("output", () => {
+    const generator = createGenerator({
+      name: EXAMPLE_GENERATOR_NAME,
+      provider: EXAMPLE_GENERATOR_PROVIDER,
+      output: EXAMPLE_GENERATOR_OUTPUT,
+    });
+    const expected = `generator ${EXAMPLE_GENERATOR_NAME} {
   provider = "${EXAMPLE_GENERATOR_PROVIDER}"
   output = "${EXAMPLE_GENERATOR_OUTPUT}"
-}`,
-    ],
-    [
-      "With binary targets",
-      createGenerator({
-        name: EXAMPLE_GENERATOR_NAME,
-        provider: EXAMPLE_GENERATOR_PROVIDER,
-        output: null,
-        binaryTargets: [EXAMPLE_BINARY_TARGET],
-      }),
-      `generator ${EXAMPLE_GENERATOR_NAME} {
+}`;
+    expect(printGenerator(generator)).toBe(expected);
+  });
+
+  test("binary targets", () => {
+    const generator = createGenerator({
+      name: EXAMPLE_GENERATOR_NAME,
+      provider: EXAMPLE_GENERATOR_PROVIDER,
+      output: null,
+      binaryTargets: [EXAMPLE_BINARY_TARGET],
+    });
+    const expected = `generator ${EXAMPLE_GENERATOR_NAME} {
   provider = "${EXAMPLE_GENERATOR_PROVIDER}"
   binaryTargets = ["${EXAMPLE_BINARY_TARGET}"]
-}`,
-    ],
-    [
-      "With preview features",
-      createGenerator({
-        name: EXAMPLE_GENERATOR_NAME,
-        provider: EXAMPLE_GENERATOR_PROVIDER,
-        previewFeatures: [EXAMPLE_GENERATOR_PREVIEW_FEATURE],
-      }),
-      `generator ${EXAMPLE_GENERATOR_NAME} {
+}`;
+    expect(printGenerator(generator)).toBe(expected);
+  });
+
+  test("preview features", () => {
+    const generator = createGenerator({
+      name: EXAMPLE_GENERATOR_NAME,
+      provider: EXAMPLE_GENERATOR_PROVIDER,
+      previewFeatures: [EXAMPLE_GENERATOR_PREVIEW_FEATURE],
+    });
+    const expected = `generator ${EXAMPLE_GENERATOR_NAME} {
   provider = "${EXAMPLE_GENERATOR_PROVIDER}"
   previewFeatures = ["${EXAMPLE_GENERATOR_PREVIEW_FEATURE}"]
-}`,
-    ],
-  ];
-  test.each(cases)("%s", (name, generator, expected) => {
+}`;
     expect(printGenerator(generator)).toBe(expected);
   });
 });
 
 describe("print", () => {
-  const cases: Array<[string, Schema, string]> = [
-    [
-      "Simple model",
-      createSchema({ models: [EXAMPLE_MODEL], enums: [] }),
-      `model ${EXAMPLE_MODEL.name} {
+  test("simple model", async () => {
+    const schema = createSchema({ models: [EXAMPLE_MODEL], enums: [] });
+    const expected = `model ${EXAMPLE_MODEL.name} {
   ${printField(EXAMPLE_STRING_FIELD, POSTGRES_SQL_PROVIDER)}
-}`,
-    ],
-    [
-      "Two models",
-      createSchema({
-        models: [
-          EXAMPLE_MODEL,
-          createModel({
-            name: "Order",
-            fields: [EXAMPLE_STRING_FIELD],
-          }),
-        ],
-        enums: [],
-      }),
-      `model ${EXAMPLE_MODEL.name} {
+}`;
+    expect(await print(schema)).toBe(expected + "\n");
+  });
+
+  test("two models", async () => {
+    const schema = createSchema({
+      models: [
+        EXAMPLE_MODEL,
+        createModel({
+          name: "Order",
+          fields: [EXAMPLE_STRING_FIELD],
+        }),
+      ],
+      enums: [],
+    });
+    const expected = `model ${EXAMPLE_MODEL.name} {
   ${printField(EXAMPLE_STRING_FIELD, POSTGRES_SQL_PROVIDER)}
 }
 
 model Order {
   ${printField(EXAMPLE_STRING_FIELD, POSTGRES_SQL_PROVIDER)}
-}`,
-    ],
-    [
-      "Single datasource",
-      createSchema({
-        models: [],
-        enums: [],
-        dataSource: createDataSource({
-          name: EXAMPLE_DATA_SOURCE_NAME,
-          provider: EXAMPLE_DATA_SOURCE_PROVIDER,
-          url: EXAMPLE_DATA_SOURCE_URL,
-        }),
+}`;
+    expect(await print(schema)).toBe(expected + "\n");
+  });
+
+  test("single datasource", async () => {
+    const schema = createSchema({
+      models: [],
+      enums: [],
+      dataSource: createDataSource({
+        name: EXAMPLE_DATA_SOURCE_NAME,
+        provider: EXAMPLE_DATA_SOURCE_PROVIDER,
+        url: EXAMPLE_DATA_SOURCE_URL,
       }),
-      `datasource ${EXAMPLE_DATA_SOURCE_NAME} {
+    });
+    const expected = `datasource ${EXAMPLE_DATA_SOURCE_NAME} {
   provider = "${EXAMPLE_DATA_SOURCE_PROVIDER}"
   url      = "${EXAMPLE_DATA_SOURCE_URL}"
-}`,
-    ],
-    [
-      "Single datasource with relationMode",
-      createSchema({
-        models: [],
-        enums: [],
-        dataSource: createDataSource({
-          name: EXAMPLE_DATA_SOURCE_NAME,
-          provider: EXAMPLE_DATA_SOURCE_PROVIDER,
-          url: EXAMPLE_DATA_SOURCE_URL,
-          relationMode: "prisma",
-        }),
+}`;
+    expect(await print(schema)).toBe(expected + "\n");
+  });
+
+  test("single datasource with relationMode", async () => {
+    const schema = createSchema({
+      models: [],
+      enums: [],
+      dataSource: createDataSource({
+        name: EXAMPLE_DATA_SOURCE_NAME,
+        provider: EXAMPLE_DATA_SOURCE_PROVIDER,
+        url: EXAMPLE_DATA_SOURCE_URL,
+        relationMode: "prisma",
       }),
-      `datasource ${EXAMPLE_DATA_SOURCE_NAME} {
+    });
+    const expected = `datasource ${EXAMPLE_DATA_SOURCE_NAME} {
   provider     = "${EXAMPLE_DATA_SOURCE_PROVIDER}"
   url          = "${EXAMPLE_DATA_SOURCE_URL}"
   relationMode = "prisma"
-}`,
-    ],
-    [
-      "Single generator",
-      createSchema({
-        models: [],
-        enums: [],
-        dataSource: undefined,
-        generators: [
-          createGenerator({
-            name: EXAMPLE_GENERATOR_NAME,
-            provider: EXAMPLE_GENERATOR_PROVIDER,
-          }),
-        ],
-      }),
-      `${printGenerator(
+}`;
+    expect(await print(schema)).toBe(expected + "\n");
+  });
+
+  test("single generator", async () => {
+    const schema = createSchema({
+      models: [],
+      enums: [],
+      dataSource: undefined,
+      generators: [
         createGenerator({
           name: EXAMPLE_GENERATOR_NAME,
           provider: EXAMPLE_GENERATOR_PROVIDER,
-        })
-      )}`,
-    ],
-    [
-      "Single enum",
-      createSchema({
-        models: [],
-        enums: [
-          createEnum({
-            name: EXAMPLE_ENUM_NAME,
-            values: [EXAMPLE_ENUM_VALUE],
-          }),
-        ],
-      }),
-      `enum ${EXAMPLE_ENUM_NAME} {
+        }),
+      ],
+    });
+    const expected = `${printGenerator(
+      createGenerator({
+        name: EXAMPLE_GENERATOR_NAME,
+        provider: EXAMPLE_GENERATOR_PROVIDER,
+      })
+    )}`;
+    expect(await print(schema)).toBe(expected + "\n");
+  });
+
+  test("single enum", async () => {
+    const schema = createSchema({
+      models: [],
+      enums: [
+        createEnum({
+          name: EXAMPLE_ENUM_NAME,
+          values: [EXAMPLE_ENUM_VALUE],
+        }),
+      ],
+    });
+    const expected = `enum ${EXAMPLE_ENUM_NAME} {
   ${EXAMPLE_ENUM_VALUE}
-}`,
-    ],
-  ];
-  test.each(cases)("print(%s)", async (name, schema, expected) => {
-    expect(await await print(schema)).toBe(expected + "\n");
+}`;
+    expect(await print(schema)).toBe(expected + "\n");
   });
 });
