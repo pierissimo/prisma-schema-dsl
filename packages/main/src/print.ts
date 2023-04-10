@@ -17,6 +17,7 @@ import {
   ScalarField,
   ScalarFieldDefault,
   Schema,
+  View,
 } from "@pmaltese/prisma-schema-dsl-types";
 import { formatSchema } from "@prisma/internals";
 
@@ -150,6 +151,27 @@ export function printModel(
   return withDocumentation(
     model.documentation,
     `model ${model.name} {\n${fieldTexts}${map}${indexes}${fullTextIndexes}\n}`
+  );
+}
+
+/**
+ * Prints view code from AST representation.
+ * Note: the code is not formatted.
+ * @param view the view AST
+ * @returns code of the model
+ */
+export function printView(
+  view: View,
+  provider: DataSourceProvider = DataSourceProvider.PostgreSQL
+): string {
+  const fieldTexts = view.fields
+    .map((field) => printField(field, provider))
+    .join("\n");
+  const map = view.map ? printModelMap(view.map, true) : "";
+
+  return withDocumentation(
+    view.documentation,
+    `view ${view.name} {\n${fieldTexts}${map}\n}`
   );
 }
 

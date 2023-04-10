@@ -6,6 +6,7 @@ import {
   createObjectField,
   createScalarField,
   createSchema,
+  createView,
 } from "./builders";
 import {
   print,
@@ -17,6 +18,7 @@ import {
   printModelFullTextIndexes,
   printModelIndexes,
   printModelMap,
+  printView,
 } from "./print";
 import {
   AUTO_INCREMENT,
@@ -31,6 +33,7 @@ import {
   ScalarType,
   Schema,
   UUID,
+  View,
 } from "@pmaltese/prisma-schema-dsl-types";
 
 const EXAMPLE_DOCUMENTATION = "Example Documentation";
@@ -494,6 +497,61 @@ ${printModelFullTextIndexes([
   ];
   test.each(cases)("%s", (name, model, expected) => {
     expect(printModel(model, POSTGRES_SQL_PROVIDER)).toBe(expected);
+  });
+});
+
+describe("printView", () => {
+  const cases: Array<[string, View, string]> = [
+    [
+      "Single field",
+      createView({
+        name: EXAMPLE_MODEL_NAME,
+        fields: [EXAMPLE_STRING_FIELD],
+      }),
+      `view ${EXAMPLE_MODEL_NAME} {
+${printField(EXAMPLE_STRING_FIELD, POSTGRES_SQL_PROVIDER)}
+}`,
+    ],
+    [
+      "Single field and documentation",
+      createView({
+        name: EXAMPLE_MODEL_NAME,
+        fields: [EXAMPLE_STRING_FIELD],
+        documentation: EXAMPLE_DOCUMENTATION,
+      }),
+      `${printDocumentation(EXAMPLE_DOCUMENTATION)}
+view ${EXAMPLE_MODEL_NAME} {
+${printField(EXAMPLE_STRING_FIELD, POSTGRES_SQL_PROVIDER)}
+}`,
+    ],
+    [
+      "Two fields",
+      createView({
+        name: EXAMPLE_MODEL_NAME,
+        fields: [EXAMPLE_STRING_FIELD, EXAMPLE_OTHER_STRING_FIELD],
+      }),
+      `view ${EXAMPLE_MODEL_NAME} {
+${printField(EXAMPLE_STRING_FIELD, POSTGRES_SQL_PROVIDER)}
+${printField(EXAMPLE_OTHER_STRING_FIELD, POSTGRES_SQL_PROVIDER)}
+}`,
+    ],
+    [
+      "Single field and map",
+      createView({
+        name: EXAMPLE_MODEL_NAME,
+        fields: [EXAMPLE_STRING_FIELD],
+        documentation: "",
+        map: EXAMPLE_MODEL_MAP,
+      }),
+      `view ${EXAMPLE_MODEL_NAME} {
+${printField(EXAMPLE_STRING_FIELD, POSTGRES_SQL_PROVIDER)}
+
+${printModelMap(EXAMPLE_MODEL_MAP)}
+}`,
+    ],
+  ];
+  test.each(cases)("%s", (name, view, expected) => {
+    expect(printView(view, POSTGRES_SQL_PROVIDER)).toBe(expected);
   });
 });
 
