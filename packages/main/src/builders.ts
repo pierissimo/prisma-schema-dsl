@@ -20,6 +20,7 @@ import {
   ScalarType,
   Schema,
   UUID,
+  View,
 } from "@pmaltese/prisma-schema-dsl-types";
 
 const NAME_REGEXP = /[A-Za-z][A-Za-z0-9_]*/;
@@ -32,17 +33,20 @@ export function createSchema({
   enums,
   dataSource,
   generators = [],
+  views,
 }: {
   models: Model[];
   enums: Enum[];
   dataSource?: DataSource;
   generators?: Generator[];
+  views?: View[];
 }): Schema {
   return {
     dataSource,
     generators,
     enums,
     models,
+    views,
   };
 }
 
