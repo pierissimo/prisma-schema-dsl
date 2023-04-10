@@ -1,5 +1,11 @@
 # @pmaltese/prisma-schema-dsl
 
+## 3.3.0
+
+### Minor Changes
+
+- missing views in createSchema
+
 ## 3.2.1
 
 ### Patch Changes
