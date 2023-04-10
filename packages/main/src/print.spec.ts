@@ -24,7 +24,6 @@ import {
   AUTO_INCREMENT,
   CUID,
   DataSourceProvider,
-  Enum,
   Generator,
   Model,
   NOW,
@@ -76,36 +75,33 @@ const EXAMPLE_MODEL_SINGLE_INDEX = "example-field-name-for-index";
 const POSTGRES_SQL_PROVIDER = DataSourceProvider.PostgreSQL;
 
 describe("printEnum", () => {
-  const cases: Array<[string, Enum, string]> = [
-    [
-      "Single value",
-      createEnum({
-        name: EXAMPLE_ENUM_NAME,
-        values: [EXAMPLE_ENUM_VALUE],
-      }),
-      `enum ${EXAMPLE_ENUM_NAME} {\n${EXAMPLE_ENUM_VALUE}\n}`,
-    ],
-    [
-      "Single value with documentation",
-      createEnum({
-        name: EXAMPLE_ENUM_NAME,
-        values: [EXAMPLE_ENUM_VALUE],
-        documentation: EXAMPLE_DOCUMENTATION,
-      }),
-      `${printDocumentation(
-        EXAMPLE_DOCUMENTATION
-      )}\nenum ${EXAMPLE_ENUM_NAME} {\n${EXAMPLE_ENUM_VALUE}\n}`,
-    ],
-    [
-      "Two values",
-      createEnum({
-        name: EXAMPLE_ENUM_NAME,
-        values: [EXAMPLE_ENUM_VALUE, EXAMPLE_OTHER_ENUM_VALUE],
-      }),
-      `enum ${EXAMPLE_ENUM_NAME} {\n${EXAMPLE_ENUM_VALUE}\n${EXAMPLE_OTHER_ENUM_VALUE}\n}`,
-    ],
-  ];
-  test.each(cases)("%s", (name, enum_, expected) => {
+  test("printEnum - Single value", () => {
+    const enum_ = createEnum({
+      name: EXAMPLE_ENUM_NAME,
+      values: [EXAMPLE_ENUM_VALUE],
+    });
+    const expected = `enum ${EXAMPLE_ENUM_NAME} {\n${EXAMPLE_ENUM_VALUE}\n}`;
+    expect(printEnum(enum_)).toBe(expected);
+  });
+
+  test("printEnum - Single value with documentation", () => {
+    const enum_ = createEnum({
+      name: EXAMPLE_ENUM_NAME,
+      values: [EXAMPLE_ENUM_VALUE],
+      documentation: EXAMPLE_DOCUMENTATION,
+    });
+    const expected = `${printDocumentation(
+      EXAMPLE_DOCUMENTATION
+    )}\nenum ${EXAMPLE_ENUM_NAME} {\n${EXAMPLE_ENUM_VALUE}\n}`;
+    expect(printEnum(enum_)).toBe(expected);
+  });
+
+  test("printEnum - Two values", () => {
+    const enum_ = createEnum({
+      name: EXAMPLE_ENUM_NAME,
+      values: [EXAMPLE_ENUM_VALUE, EXAMPLE_OTHER_ENUM_VALUE],
+    });
+    const expected = `enum ${EXAMPLE_ENUM_NAME} {\n${EXAMPLE_ENUM_VALUE}\n${EXAMPLE_OTHER_ENUM_VALUE}\n}`;
     expect(printEnum(enum_)).toBe(expected);
   });
 });
