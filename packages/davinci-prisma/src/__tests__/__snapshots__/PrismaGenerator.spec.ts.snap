@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PrismaGenerator Schema - should correctly generate a prisma string 1`] = `
+"datasource myDatasource {
+  provider = \\"postgresql\\"
+  url      = env(\\"DB_URL\\")
+}
+
+generator client1 {
+  provider        = \\"prisma-client-js\\"
+  previewFeatures = [\\"fullTextSearch\\", \\"fullTextIndex\\", \\"clientExtensions\\"]
+}
+
+model Customer {
+  id        String          @id
+  firstname String
+  lastname  String
+  tokens    CustomerToken[]
+}
+
+model CustomerToken {
+  customerId String?
+  customer   Customer? @relation(fields: [customerId], references: [id])
+}
+"
+`;
