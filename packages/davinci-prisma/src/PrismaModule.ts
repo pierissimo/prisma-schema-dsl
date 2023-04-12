@@ -2,7 +2,7 @@ import { App, Module } from '@davinci/core'
 import { ClassType } from '@davinci/reflector'
 import fs from 'fs/promises'
 import pathLib from 'path'
-import { DataSourceProvider, Enum, Generator } from '@pmaltese/prisma-schema-generator'
+import { DataSourceProvider, Enum, Generator, Schema } from '@pmaltese/prisma-schema-generator'
 import { exec } from 'child_process'
 import { Logger } from 'pino'
 import { PrismaGenerator } from './PrismaGenerator'
@@ -29,6 +29,8 @@ interface PrismaModuleOptions {
 export class PrismaModule extends Module {
   app: App
   logger: Logger
+  prismaSchema?: Schema
+  prismaString?: string
 
   constructor(private options: PrismaModuleOptions) {
     super()
@@ -43,32 +45,44 @@ export class PrismaModule extends Module {
     this.logger = app.logger.child({ module: this.getModuleId() })
 
     if (this.options.schemaGeneration?.enabled) {
-      const generator = new PrismaGenerator()
-
-      const { prismaString } = await generator
-        .setDatasource(this.options.datasource)
-        .setGenerators(this.options.generators ?? [])
-        .setEnums(this.options.enums ?? [])
-        .reflectModels(this.options.models ?? [])
-        .generate()
-
-      const path = pathLib.join(process.cwd(), this.options.schemaGeneration.path)
-      await fs.writeFile(path, prismaString)
-      this.logger.info(`prisma definition file generated in: ${path}`)
+      await this.generateSchemaFile()
     }
 
     if (this.options.clientGeneration?.enabled) {
-      await new Promise((resolve, reject) => {
-        exec('npx prisma generate', (error, stdout) => {
-          if (error) {
-            this.logger.error({ error })
-            return reject(error)
-          }
-
-          this.logger.info(stdout)
-          return resolve(stdout)
-        })
-      })
+      await this.execPrismaGenerate()
     }
+  }
+
+  async generateSchemaFile() {
+    const generator = new PrismaGenerator()
+
+    const { schema, prismaString } = await generator
+      .setDatasource(this.options.datasource)
+      .setGenerators(this.options.generators ?? [])
+      .setEnums(this.options.enums ?? [])
+      .reflectModels(this.options.models ?? [])
+      .generate()
+
+    this.prismaString = prismaString
+    this.prismaSchema = schema
+
+    const relativePath = this.options.schemaGeneration?.path as string
+    const path = pathLib.join(process.cwd(), relativePath)
+    await fs.writeFile(path, prismaString)
+    this.logger.info(`prisma definition file generated in: ${path}`)
+  }
+
+  execPrismaGenerate() {
+    return new Promise((resolve, reject) => {
+      exec('npx prisma generate', (error, stdout) => {
+        if (error) {
+          this.logger.error({ error })
+          return reject(error)
+        }
+
+        this.logger.info(stdout)
+        return resolve(stdout)
+      })
+    })
   }
 }
