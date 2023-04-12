@@ -1,5 +1,11 @@
 # @pmaltese/prisma-schema-dsl
 
+## 4.0.1
+
+### Patch Changes
+
+- 60753e2: Implemented a DaVinci module which facilitates the generation of a schema.prisma file through the use of Typescript classes and decorators.
+
 ## 4.0.0
 
 ### Major Changes
