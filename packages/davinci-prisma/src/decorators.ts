@@ -24,7 +24,7 @@ type DefaultValue =
   | boolean
   | number
   | string
-  | typeof DefaultValueFunctions[keyof typeof DefaultValueFunctions]
+  | (typeof DefaultValueFunctions)[keyof typeof DefaultValueFunctions]
 
 export interface ScalarDecoratorOptions {
   name?: string
