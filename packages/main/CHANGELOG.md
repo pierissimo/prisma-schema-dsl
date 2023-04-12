@@ -1,5 +1,11 @@
 # @pmaltese/prisma-schema-dsl
 
+## 4.1.0
+
+### Minor Changes
+
+- e408096: fix dependency linking via workspace: protocol
+
 ## 4.0.1
 
 ### Patch Changes

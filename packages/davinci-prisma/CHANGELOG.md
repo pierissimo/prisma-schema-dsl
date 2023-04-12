@@ -1,5 +1,16 @@
 # @pmaltese/davinci-prisma
 
+## 0.2.0
+
+### Minor Changes
+
+- e408096: fix dependency linking via workspace: protocol
+
+### Patch Changes
+
+- Updated dependencies [e408096]
+  - @pmaltese/prisma-schema-generator@4.1.0
+
 ## 0.1.1
 
 ### Patch Changes
