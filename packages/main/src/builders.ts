@@ -21,7 +21,7 @@ import {
   Schema,
   UUID,
   View,
-} from "@pmaltese/prisma-schema-dsl-types";
+} from "./types";
 
 const NAME_REGEXP = /[A-Za-z][A-Za-z0-9_]*/;
 export const OPTIONAL_LIST_ERROR_MESSAGE =

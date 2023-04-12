@@ -1,14 +1,13 @@
 {
-  "name": "@pmaltese/prisma-schema-dsl",
+  "name": "@pmaltese/prisma-schema-generator",
   "version": "3.3.0",
-  "description": "JavaScript interface for Prisma Schema DSL",
+  "description": "JavaScript SDK to generate Prisma Schema file",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
     "test": "jest",
     "format": "prettier --write src",
-    "check-format": "prettier --check src",
-    "prepare": "pnpm run build"
+    "check-format": "prettier --check src"
   },
   "keywords": [
     "prisma",
@@ -19,7 +18,9 @@
     "generator"
   ],
   "author": {
-    "name": "Iddan Aaronsohn"
+    "name": "Pietro Maltese",
+    "email": "maltesepiero@gmail.com",
+    "url": "https://pieromaltese.me"
   },
   "license": "MIT",
   "dependencies": {
@@ -27,7 +28,6 @@
     "lodash.isempty": "^4.4.0"
   },
   "devDependencies": {
-    "@pmaltese/prisma-schema-dsl-types": "^1.2.1",
     "@types/jest": "^26.0.24",
     "@types/lodash.isempty": "^4.4.6",
     "jest": "^26.6.3",

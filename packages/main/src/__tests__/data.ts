@@ -1,8 +1,5 @@
 import { createModel, createScalarField } from "../builders";
-import {
-  DataSourceProvider,
-  ScalarType,
-} from "@pmaltese/prisma-schema-dsl-types";
+import { DataSourceProvider, ScalarType, } from "../types";
 
 export const EXAMPLE_DOCUMENTATION = "Example Documentation";
 export const EXAMPLE_ENUM_NAME = "ExampleEnumName";

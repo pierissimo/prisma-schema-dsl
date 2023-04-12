@@ -1,9 +1,5 @@
-import { ScalarType } from "@pmaltese/prisma-schema-dsl-types";
-import {
-  createObjectField,
-  createScalarField,
-  OPTIONAL_LIST_ERROR_MESSAGE,
-} from "../builders";
+import { ScalarType } from "../types";
+import { createObjectField, createScalarField, OPTIONAL_LIST_ERROR_MESSAGE, } from "../builders";
 
 const EXAMPLE_NAME = "EXAMPLE_NAME";
 const EXAMPLE_SCALAR_TYPE = ScalarType.String;

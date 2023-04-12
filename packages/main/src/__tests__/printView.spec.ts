@@ -10,7 +10,7 @@ import {
   EXAMPLE_STRING_ID_FIELD,
 } from "./data";
 import { getDMMF } from "@prisma/internals";
-import { View } from "@pmaltese/prisma-schema-dsl-types";
+import { View } from "../types";
 
 const generateDMMF = async (view: View) => {
   const generator = createGenerator({

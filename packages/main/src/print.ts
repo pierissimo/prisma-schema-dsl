@@ -18,7 +18,7 @@ import {
   ScalarFieldDefault,
   Schema,
   View,
-} from "@pmaltese/prisma-schema-dsl-types";
+} from "./types";
 import { formatSchema } from "@prisma/internals";
 
 type Relation = {

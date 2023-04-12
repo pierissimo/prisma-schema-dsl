@@ -1,21 +1,16 @@
 import { createDataSource, createGenerator, createModel } from "../builders";
-import {
-  print,
-  printModel,
-  printModelFullTextIndexes,
-  printModelIndexes,
-} from "../print";
-import { DataSourceProvider } from "@pmaltese/prisma-schema-dsl-types";
+import { print, printModel, printModelFullTextIndexes, printModelIndexes, } from "../print";
+import { DataSourceProvider } from "../types";
 import { getDMMF } from "@prisma/internals";
 import {
-  EXAMPLE_DOCUMENTATION,
-  EXAMPLE_FIELD_NAME,
-  EXAMPLE_MODEL_MAP,
-  EXAMPLE_MODEL_NAME,
-  EXAMPLE_OTHER_FIELD_NAME,
-  EXAMPLE_OTHER_STRING_FIELD,
-  EXAMPLE_STRING_ID_FIELD,
-  POSTGRES_SQL_PROVIDER,
+    EXAMPLE_DOCUMENTATION,
+    EXAMPLE_FIELD_NAME,
+    EXAMPLE_MODEL_MAP,
+    EXAMPLE_MODEL_NAME,
+    EXAMPLE_OTHER_FIELD_NAME,
+    EXAMPLE_OTHER_STRING_FIELD,
+    EXAMPLE_STRING_ID_FIELD,
+    POSTGRES_SQL_PROVIDER,
 } from "./data";
 
 describe("printModel", () => {

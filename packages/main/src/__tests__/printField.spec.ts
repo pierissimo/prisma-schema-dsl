@@ -1,21 +1,15 @@
 import { printDocumentation, printField } from "../print";
-import {
-  AUTO_INCREMENT,
-  CUID,
-  NOW,
-  ScalarType,
-  UUID,
-} from "@pmaltese/prisma-schema-dsl-types";
+import { AUTO_INCREMENT, CUID, NOW, ScalarType, UUID, } from "../types";
 import { createObjectField, createScalarField } from "../builders";
 import {
-  EXAMPLE_DOCUMENTATION,
-  EXAMPLE_FIELD_NAME,
-  EXAMPLE_OBJECT_NAME,
-  EXAMPLE_RELATION_FIELD_NAME,
-  EXAMPLE_RELATION_NAME,
-  EXAMPLE_RELATION_REFERENCE_FIELD_NAME,
-  EXAMPLE_STRING_FIELD,
-  POSTGRES_SQL_PROVIDER,
+    EXAMPLE_DOCUMENTATION,
+    EXAMPLE_FIELD_NAME,
+    EXAMPLE_OBJECT_NAME,
+    EXAMPLE_RELATION_FIELD_NAME,
+    EXAMPLE_RELATION_NAME,
+    EXAMPLE_RELATION_REFERENCE_FIELD_NAME,
+    EXAMPLE_STRING_FIELD,
+    POSTGRES_SQL_PROVIDER,
 } from "./data";
 
 describe("printField", () => {
