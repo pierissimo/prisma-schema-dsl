@@ -21,11 +21,11 @@ import {
   Schema,
   UUID,
   View,
-} from "./types";
+} from './types'
 
-const NAME_REGEXP = /[A-Za-z][A-Za-z0-9_]*/;
+const NAME_REGEXP = /[A-Za-z][A-Za-z0-9_]*/
 export const OPTIONAL_LIST_ERROR_MESSAGE =
-  "Invalid modifiers: You cannot combine isRequired: false and isList: true - optional lists are not supported.";
+  'Invalid modifiers: You cannot combine isRequired: false and isList: true - optional lists are not supported.'
 
 /** Creates a schema AST object */
 export function createSchema({
@@ -35,11 +35,11 @@ export function createSchema({
   generators = [],
   views,
 }: {
-  models: Model[];
-  enums: Enum[];
-  dataSource?: DataSource;
-  generators?: Generator[];
-  views?: View[];
+  models: Model[]
+  enums: Enum[]
+  dataSource?: DataSource
+  generators?: Generator[]
+  views?: View[]
 }): Schema {
   return {
     dataSource,
@@ -47,7 +47,7 @@ export function createSchema({
     enums,
     models,
     views,
-  };
+  }
 }
 
 /** Creates an enum AST object */
@@ -56,16 +56,16 @@ export function createEnum({
   values,
   documentation,
 }: {
-  name: string;
-  values: string[];
-  documentation?: string;
+  name: string
+  values: string[]
+  documentation?: string
 }): Enum {
-  validateName(name);
+  validateName(name)
   return {
     name,
     values,
     documentation,
-  };
+  }
 }
 
 /** Creates a model AST object */
@@ -77,14 +77,14 @@ export function createModel({
   indexes,
   fullTextIndexes,
 }: {
-  name: string;
-  fields: Array<ScalarField | ObjectField>;
-  documentation?: string;
-  map?: string;
-  indexes?: Array<Index>;
-  fullTextIndexes?: Array<FullTextIndex>;
+  name: string
+  fields: Array<ScalarField | ObjectField>
+  documentation?: string
+  map?: string
+  indexes?: Array<Index>
+  fullTextIndexes?: Array<FullTextIndex>
 }): Model {
-  validateName(name);
+  validateName(name)
   return {
     name,
     fields,
@@ -92,7 +92,7 @@ export function createModel({
     map,
     indexes,
     fullTextIndexes,
-  };
+  }
 }
 
 /** Creates a view AST object */
@@ -102,20 +102,20 @@ export function createView({
   documentation,
   map,
 }: {
-  name: string;
-  fields: Array<ScalarField | ObjectField>;
-  documentation?: string;
-  map?: string;
-  indexes?: Array<Index>;
-  fullTextIndexes?: Array<FullTextIndex>;
+  name: string
+  fields: Array<ScalarField | ObjectField>
+  documentation?: string
+  map?: string
+  indexes?: Array<Index>
+  fullTextIndexes?: Array<FullTextIndex>
 }): Model {
-  validateName(name);
+  validateName(name)
   return {
     name,
     fields,
     documentation,
     map,
-  };
+  }
 }
 
 /**
@@ -134,20 +134,20 @@ export function createScalarField({
   documentation,
   isForeignKey = false,
 }: {
-  name: string;
-  type: ScalarType;
-  isList?: boolean;
-  isRequired?: boolean;
-  isUnique?: boolean;
-  isId?: boolean;
-  isUpdatedAt?: boolean;
-  defaultValue?: ScalarFieldDefault;
-  documentation?: string;
-  isForeignKey?: boolean;
+  name: string
+  type: ScalarType
+  isList?: boolean
+  isRequired?: boolean
+  isUnique?: boolean
+  isId?: boolean
+  isUpdatedAt?: boolean
+  defaultValue?: ScalarFieldDefault
+  documentation?: string
+  isForeignKey?: boolean
 }): ScalarField {
-  validateName(name);
-  validateScalarDefault(type, defaultValue);
-  validateModifiers(isRequired, isList);
+  validateName(name)
+  validateScalarDefault(type, defaultValue)
+  validateModifiers(isRequired, isList)
   return {
     name,
     isList,
@@ -160,74 +160,59 @@ export function createScalarField({
     default: defaultValue,
     documentation,
     isForeignKey,
-  };
+  }
 }
 
 function validateScalarDefault(type: ScalarType, value: ScalarFieldDefault) {
   if (value === null) {
-    return;
+    return
   }
   switch (type) {
     case ScalarType.String: {
       if (
         !(
-          typeof value === "string" ||
-          (isCallExpression(value) &&
-            (value.callee === UUID || value.callee === CUID))
+          typeof value === 'string' ||
+          (isCallExpression(value) && (value.callee === UUID || value.callee === CUID))
         )
       ) {
-        throw new Error(
-          "Default must be a string or a call expression to uuid() or cuid()"
-        );
+        throw new Error('Default must be a string or a call expression to uuid() or cuid()')
       }
-      return;
+      return
     }
     case ScalarType.Boolean: {
-      if (typeof value !== "boolean") {
-        throw new Error("Default must be a boolean");
+      if (typeof value !== 'boolean') {
+        throw new Error('Default must be a boolean')
       }
-      return;
+      return
     }
     case ScalarType.Int: {
       if (
-        !(
-          typeof value === "number" ||
-          (isCallExpression(value) && value.callee === AUTO_INCREMENT)
-        )
+        !(typeof value === 'number' || (isCallExpression(value) && value.callee === AUTO_INCREMENT))
       ) {
-        throw new Error(
-          "Default must be a number or call expression to autoincrement()"
-        );
+        throw new Error('Default must be a number or call expression to autoincrement()')
       }
-      return;
+      return
     }
     case ScalarType.Float: {
-      if (!(typeof value == "number")) {
-        throw new Error("Default must be a number");
+      if (!(typeof value == 'number')) {
+        throw new Error('Default must be a number')
       }
-      return;
+      return
     }
     case ScalarType.DateTime: {
-      if (
-        !(
-          typeof value === "string" ||
-          (isCallExpression(value) && value.callee === NOW)
-        )
-      ) {
-        throw new Error(
-          "Default must be a date-time string or a call expression to now()"
-        );
+      if (!(typeof value === 'string' || (isCallExpression(value) && value.callee === NOW))) {
+        throw new Error('Default must be a date-time string or a call expression to now()')
       }
-      return;
+      return
     }
     case ScalarType.Json: {
-      if (typeof value !== "string") {
-        throw new Error("Default must a JSON string");
+      if (typeof value !== 'string') {
+        throw new Error('Default must a JSON string')
       }
-      return;
+      return
     }
     default: {
-      throw new Error(`Unknown type ${type}`);
+      throw new Error(`Unknown type ${type}`)
     }
   }
 }
@@ -248,19 +233,19 @@ export function createObjectField({
   relationOnUpdate = ReferentialActions.NONE,
   documentation,
 }: {
-  name: string;
-  type: string;
-  isList?: boolean;
-  isRequired?: boolean;
-  relationName?: string | null;
-  relationFields?: string[];
-  relationReferences?: string[];
-  relationOnDelete?: ReferentialActions;
-  relationOnUpdate?: ReferentialActions;
-  documentation?: string;
+  name: string
+  type: string
+  isList?: boolean
+  isRequired?: boolean
+  relationName?: string | null
+  relationFields?: string[]
+  relationReferences?: string[]
+  relationOnDelete?: ReferentialActions
+  relationOnUpdate?: ReferentialActions
+  documentation?: string
 }): ObjectField {
-  validateName(name);
-  validateModifiers(isRequired, isList);
+  validateName(name)
+  validateModifiers(isRequired, isList)
 
   return {
     name,
@@ -274,20 +259,20 @@ export function createObjectField({
     relationOnDelete,
     relationOnUpdate,
     documentation,
-  };
+  }
 }
 
 function validateName(name: string): void {
   if (!name.match(NAME_REGEXP)) {
     throw new Error(
-      `Invalid name: "${name}". Name must start with a letter and can contain only letters, numbers and underscores`
-    );
+      `Invalid name: "${name}". Name must start with a letter and can contain only letters, numbers and underscores`,
+    )
   }
 }
 
 function validateModifiers(isRequired: boolean, isList: boolean): void {
   if (!isRequired && isList) {
-    throw new Error(OPTIONAL_LIST_ERROR_MESSAGE);
+    throw new Error(OPTIONAL_LIST_ERROR_MESSAGE)
   }
 }
 
@@ -298,17 +283,17 @@ export function createDataSource({
   url,
   relationMode,
 }: {
-  name: string;
-  provider: DataSourceProvider;
-  url: string | DataSourceURLEnv;
-  relationMode?: DataSource["relationMode"];
+  name: string
+  provider: DataSourceProvider
+  url: string | DataSourceURLEnv
+  relationMode?: DataSource['relationMode']
 }): DataSource {
   return {
     name,
     provider,
     url,
     relationMode,
-  };
+  }
 }
 
 /** Creates a generator AST object */
@@ -319,11 +304,11 @@ export function createGenerator({
   binaryTargets = [],
   previewFeatures = [],
 }: {
-  name: string;
-  provider: string;
-  output?: string | null;
-  binaryTargets?: string[];
-  previewFeatures?: Array<PreviewFeature>;
+  name: string
+  provider: string
+  output?: string | null
+  binaryTargets?: string[]
+  previewFeatures?: Array<PreviewFeature>
 }): Generator {
   return {
     name,
@@ -331,5 +316,5 @@ export function createGenerator({
     output,
     binaryTargets,
     previewFeatures,
-  };
+  }
 }
