@@ -1,12 +1,7 @@
-import { createDataSource, createGenerator, createModel } from "../builders";
-import {
-  print,
-  printModel,
-  printModelFullTextIndexes,
-  printModelIndexes,
-} from "../print";
-import { DataSourceProvider } from "@pmaltese/prisma-schema-dsl-types";
-import { getDMMF } from "@prisma/internals";
+import { createDataSource, createGenerator, createModel } from '../builders'
+import { print, printModel, printModelFullTextIndexes, printModelIndexes } from '../print'
+import { DataSourceProvider } from '../types'
+import { getDMMF } from '@prisma/internals'
 import {
   EXAMPLE_DOCUMENTATION,
   EXAMPLE_FIELD_NAME,
@@ -16,16 +11,16 @@ import {
   EXAMPLE_OTHER_STRING_FIELD,
   EXAMPLE_STRING_ID_FIELD,
   POSTGRES_SQL_PROVIDER,
-} from "./data";
+} from './data'
 
-describe("printModel", () => {
-  it("single field", async () => {
+describe('printModel', () => {
+  it('single field', async () => {
     const model = createModel({
       name: EXAMPLE_MODEL_NAME,
       fields: [EXAMPLE_STRING_ID_FIELD],
-    });
-    const printed = printModel(model, POSTGRES_SQL_PROVIDER);
-    const meta = await getDMMF({ datamodel: printed });
+    })
+    const printed = printModel(model, POSTGRES_SQL_PROVIDER)
+    const meta = await getDMMF({ datamodel: printed })
 
     expect(meta).toMatchObject({
       datamodel: {
@@ -35,14 +30,14 @@ describe("printModel", () => {
             fields: [
               {
                 name: EXAMPLE_FIELD_NAME,
-                kind: "scalar",
+                kind: 'scalar',
                 isList: false,
                 isRequired: true,
                 isUnique: false,
                 isId: true,
                 isReadOnly: false,
                 hasDefaultValue: false,
-                type: "String",
+                type: 'String',
                 isGenerated: false,
                 isUpdatedAt: false,
               },
@@ -52,17 +47,17 @@ describe("printModel", () => {
           },
         ],
       },
-    });
-  });
+    })
+  })
 
-  it("single field and documentation", async () => {
+  it('single field and documentation', async () => {
     const model = createModel({
       name: EXAMPLE_MODEL_NAME,
       fields: [EXAMPLE_STRING_ID_FIELD],
       documentation: EXAMPLE_DOCUMENTATION,
-    });
-    const printed = printModel(model, POSTGRES_SQL_PROVIDER);
-    const meta = await getDMMF({ datamodel: printed });
+    })
+    const printed = printModel(model, POSTGRES_SQL_PROVIDER)
+    const meta = await getDMMF({ datamodel: printed })
 
     expect(meta).toMatchObject({
       datamodel: {
@@ -72,14 +67,14 @@ describe("printModel", () => {
             fields: [
               {
                 name: EXAMPLE_FIELD_NAME,
-                kind: "scalar",
+                kind: 'scalar',
                 isList: false,
                 isRequired: true,
                 isUnique: false,
                 isId: true,
                 isReadOnly: false,
                 hasDefaultValue: false,
-                type: "String",
+                type: 'String',
                 isGenerated: false,
                 isUpdatedAt: false,
               },
@@ -89,16 +84,16 @@ describe("printModel", () => {
           },
         ],
       },
-    });
-  });
+    })
+  })
 
-  it("two fields", async () => {
+  it('two fields', async () => {
     const model = createModel({
       name: EXAMPLE_MODEL_NAME,
       fields: [EXAMPLE_STRING_ID_FIELD, EXAMPLE_OTHER_STRING_FIELD],
-    });
-    const printed = printModel(model, POSTGRES_SQL_PROVIDER);
-    const meta = await getDMMF({ datamodel: printed });
+    })
+    const printed = printModel(model, POSTGRES_SQL_PROVIDER)
+    const meta = await getDMMF({ datamodel: printed })
 
     expect(meta).toMatchObject({
       datamodel: {
@@ -108,27 +103,27 @@ describe("printModel", () => {
             fields: [
               {
                 name: EXAMPLE_FIELD_NAME,
-                kind: "scalar",
+                kind: 'scalar',
                 isList: false,
                 isRequired: true,
                 isUnique: false,
                 isId: true,
                 isReadOnly: false,
                 hasDefaultValue: false,
-                type: "String",
+                type: 'String',
                 isGenerated: false,
                 isUpdatedAt: false,
               },
               {
                 name: EXAMPLE_OTHER_FIELD_NAME,
-                kind: "scalar",
+                kind: 'scalar',
                 isList: false,
                 isRequired: true,
                 isUnique: false,
                 isId: false,
                 isReadOnly: false,
                 hasDefaultValue: false,
-                type: "String",
+                type: 'String',
                 isGenerated: false,
                 isUpdatedAt: false,
               },
@@ -137,18 +132,18 @@ describe("printModel", () => {
           },
         ],
       },
-    });
-  });
+    })
+  })
 
-  it("single field and map", async () => {
+  it('single field and map', async () => {
     const EXAMPLE_MODEL = createModel({
       name: EXAMPLE_MODEL_NAME,
       fields: [EXAMPLE_STRING_ID_FIELD],
-      documentation: "",
+      documentation: '',
       map: EXAMPLE_MODEL_MAP,
-    });
-    const printed = printModel(EXAMPLE_MODEL);
-    const meta = await getDMMF({ datamodel: printed });
+    })
+    const printed = printModel(EXAMPLE_MODEL)
+    const meta = await getDMMF({ datamodel: printed })
 
     expect(meta).toMatchObject({
       datamodel: {
@@ -159,14 +154,14 @@ describe("printModel", () => {
             fields: [
               {
                 name: EXAMPLE_FIELD_NAME,
-                kind: "scalar",
+                kind: 'scalar',
                 isList: false,
                 isRequired: true,
                 isUnique: false,
                 isId: true,
                 isReadOnly: false,
                 hasDefaultValue: false,
-                type: "String",
+                type: 'String',
                 isGenerated: false,
                 isUpdatedAt: false,
               },
@@ -175,23 +170,21 @@ describe("printModel", () => {
           },
         ],
       },
-    });
-  });
+    })
+  })
 
-  it("two fields and one index", async () => {
+  it('two fields and one index', async () => {
     const model = createModel({
       name: EXAMPLE_MODEL_NAME,
       fields: [EXAMPLE_STRING_ID_FIELD, EXAMPLE_OTHER_STRING_FIELD],
-      indexes: [{ fields: [{ name: EXAMPLE_FIELD_NAME, sort: "asc" }] }],
-    });
-    const printed = printModel(model);
-    const meta = await getDMMF({ datamodel: printed });
+      indexes: [{ fields: [{ name: EXAMPLE_FIELD_NAME, sort: 'asc' }] }],
+    })
+    const printed = printModel(model)
+    const meta = await getDMMF({ datamodel: printed })
 
     expect(printed).toContain(
-      printModelIndexes([
-        { fields: [{ name: EXAMPLE_FIELD_NAME, sort: "asc" }] },
-      ])
-    );
+      printModelIndexes([{ fields: [{ name: EXAMPLE_FIELD_NAME, sort: 'asc' }] }]),
+    )
     expect(meta).toMatchObject({
       datamodel: {
         models: [
@@ -200,27 +193,27 @@ describe("printModel", () => {
             fields: [
               {
                 name: EXAMPLE_FIELD_NAME,
-                kind: "scalar",
+                kind: 'scalar',
                 isList: false,
                 isRequired: true,
                 isUnique: false,
                 isId: true,
                 isReadOnly: false,
                 hasDefaultValue: false,
-                type: "String",
+                type: 'String',
                 isGenerated: false,
                 isUpdatedAt: false,
               },
               {
                 name: EXAMPLE_OTHER_FIELD_NAME,
-                kind: "scalar",
+                kind: 'scalar',
                 isList: false,
                 isRequired: true,
                 isUnique: false,
                 isId: false,
                 isReadOnly: false,
                 hasDefaultValue: false,
-                type: "String",
+                type: 'String',
                 isGenerated: false,
                 isUpdatedAt: false,
               },
@@ -229,67 +222,67 @@ describe("printModel", () => {
           },
         ],
       },
-    });
-  });
+    })
+  })
 
-  it("two fields and two indexes", async () => {
+  it('two fields and two indexes', async () => {
     const model = createModel({
       name: EXAMPLE_MODEL_NAME,
       fields: [EXAMPLE_STRING_ID_FIELD, EXAMPLE_OTHER_STRING_FIELD],
-      documentation: "",
+      documentation: '',
       indexes: [
         {
           fields: [
-            { name: EXAMPLE_FIELD_NAME, sort: "desc" },
-            { name: EXAMPLE_OTHER_FIELD_NAME, sort: "asc" },
+            { name: EXAMPLE_FIELD_NAME, sort: 'desc' },
+            { name: EXAMPLE_OTHER_FIELD_NAME, sort: 'asc' },
           ],
         },
       ],
-    });
-    const printed = printModel(model);
-    const meta = await getDMMF({ datamodel: printed });
+    })
+    const printed = printModel(model)
+    const meta = await getDMMF({ datamodel: printed })
 
     expect(printed).toContain(
       printModelIndexes([
         {
           fields: [
-            { name: EXAMPLE_FIELD_NAME, sort: "desc" },
-            { name: EXAMPLE_OTHER_FIELD_NAME, sort: "asc" },
+            { name: EXAMPLE_FIELD_NAME, sort: 'desc' },
+            { name: EXAMPLE_OTHER_FIELD_NAME, sort: 'asc' },
           ],
         },
-      ])
-    );
-    expect(meta).toMatchObject({});
-  });
+      ]),
+    )
+    expect(meta).toMatchObject({})
+  })
 
-  test("two fields and one full text index", async () => {
+  test('two fields and one full text index', async () => {
     const model = createModel({
       name: EXAMPLE_MODEL_NAME,
       fields: [EXAMPLE_STRING_ID_FIELD, EXAMPLE_OTHER_STRING_FIELD],
-      documentation: "",
+      documentation: '',
       fullTextIndexes: [{ fields: [{ name: EXAMPLE_FIELD_NAME }] }],
-    });
+    })
     const generator = createGenerator({
-      name: "gen",
-      provider: "prisma-client-js",
-      previewFeatures: ["fullTextIndex"],
-    });
+      name: 'gen',
+      provider: 'prisma-client-js',
+      previewFeatures: ['fullTextIndex'],
+    })
     const dataSource = createDataSource({
-      name: "datasource",
+      name: 'datasource',
       provider: DataSourceProvider.MySQL,
-      url: "",
-    });
+      url: '',
+    })
     const printed = await print({
       dataSource,
       models: [model],
       generators: [generator],
       enums: [],
-    });
-    const meta = await getDMMF({ datamodel: printed });
+    })
+    const meta = await getDMMF({ datamodel: printed })
 
     expect(printed).toContain(
-      printModelFullTextIndexes([{ fields: [{ name: EXAMPLE_FIELD_NAME }] }])
-    );
+      printModelFullTextIndexes([{ fields: [{ name: EXAMPLE_FIELD_NAME }] }]),
+    )
     expect(meta).toMatchObject({
       datamodel: {
         models: [
@@ -298,27 +291,27 @@ describe("printModel", () => {
             fields: [
               {
                 name: EXAMPLE_FIELD_NAME,
-                kind: "scalar",
+                kind: 'scalar',
                 isList: false,
                 isRequired: true,
                 isUnique: false,
                 isId: true,
                 isReadOnly: false,
                 hasDefaultValue: false,
-                type: "String",
+                type: 'String',
                 isGenerated: false,
                 isUpdatedAt: false,
               },
               {
                 name: EXAMPLE_OTHER_FIELD_NAME,
-                kind: "scalar",
+                kind: 'scalar',
                 isList: false,
                 isRequired: true,
                 isUnique: false,
                 isId: false,
                 isReadOnly: false,
                 hasDefaultValue: false,
-                type: "String",
+                type: 'String',
                 isGenerated: false,
                 isUpdatedAt: false,
               },
@@ -327,51 +320,45 @@ describe("printModel", () => {
           },
         ],
       },
-    });
-  });
+    })
+  })
 
-  test("two fields and two full text indexes", async () => {
+  test('two fields and two full text indexes', async () => {
     const model = createModel({
       name: EXAMPLE_MODEL_NAME,
       fields: [EXAMPLE_STRING_ID_FIELD, EXAMPLE_OTHER_STRING_FIELD],
-      documentation: "",
+      documentation: '',
       fullTextIndexes: [
         {
-          fields: [
-            { name: EXAMPLE_FIELD_NAME },
-            { name: EXAMPLE_OTHER_FIELD_NAME },
-          ],
+          fields: [{ name: EXAMPLE_FIELD_NAME }, { name: EXAMPLE_OTHER_FIELD_NAME }],
         },
       ],
-    });
+    })
     const generator = createGenerator({
-      name: "gen",
-      provider: "prisma-client-js",
-      previewFeatures: ["fullTextIndex"],
-    });
+      name: 'gen',
+      provider: 'prisma-client-js',
+      previewFeatures: ['fullTextIndex'],
+    })
     const dataSource = createDataSource({
-      name: "datasource",
+      name: 'datasource',
       provider: DataSourceProvider.MySQL,
-      url: "",
-    });
+      url: '',
+    })
     const printed = await print({
       dataSource,
       models: [model],
       generators: [generator],
       enums: [],
-    });
-    const meta = await getDMMF({ datamodel: printed });
+    })
+    const meta = await getDMMF({ datamodel: printed })
 
     expect(printed).toContain(
       printModelFullTextIndexes([
         {
-          fields: [
-            { name: EXAMPLE_FIELD_NAME },
-            { name: EXAMPLE_OTHER_FIELD_NAME },
-          ],
+          fields: [{ name: EXAMPLE_FIELD_NAME }, { name: EXAMPLE_OTHER_FIELD_NAME }],
         },
-      ])
-    );
+      ]),
+    )
     expect(meta).toMatchObject({
       datamodel: {
         models: [
@@ -380,27 +367,27 @@ describe("printModel", () => {
             fields: [
               {
                 name: EXAMPLE_FIELD_NAME,
-                kind: "scalar",
+                kind: 'scalar',
                 isList: false,
                 isRequired: true,
                 isUnique: false,
                 isId: true,
                 isReadOnly: false,
                 hasDefaultValue: false,
-                type: "String",
+                type: 'String',
                 isGenerated: false,
                 isUpdatedAt: false,
               },
               {
                 name: EXAMPLE_OTHER_FIELD_NAME,
-                kind: "scalar",
+                kind: 'scalar',
                 isList: false,
                 isRequired: true,
                 isUnique: false,
                 isId: false,
                 isReadOnly: false,
                 hasDefaultValue: false,
-                type: "String",
+                type: 'String',
                 isGenerated: false,
                 isUpdatedAt: false,
               },
@@ -409,46 +396,42 @@ describe("printModel", () => {
           },
         ],
       },
-    });
-  });
+    })
+  })
 
-  test("two fields, one index and one full text index", async () => {
+  test('two fields, one index and one full text index', async () => {
     const model = createModel({
       name: EXAMPLE_MODEL_NAME,
       fields: [EXAMPLE_STRING_ID_FIELD, EXAMPLE_OTHER_STRING_FIELD],
-      documentation: "",
-      indexes: [{ fields: [{ name: EXAMPLE_FIELD_NAME, sort: "asc" }] }],
+      documentation: '',
+      indexes: [{ fields: [{ name: EXAMPLE_FIELD_NAME, sort: 'asc' }] }],
       fullTextIndexes: [{ fields: [{ name: EXAMPLE_OTHER_FIELD_NAME }] }],
-    });
+    })
 
     const generator = createGenerator({
-      name: "gen",
-      provider: "prisma-client-js",
-      previewFeatures: ["fullTextIndex"],
-    });
+      name: 'gen',
+      provider: 'prisma-client-js',
+      previewFeatures: ['fullTextIndex'],
+    })
     const dataSource = createDataSource({
-      name: "datasource",
+      name: 'datasource',
       provider: DataSourceProvider.MySQL,
-      url: "",
-    });
+      url: '',
+    })
     const printed = await print({
       dataSource,
       models: [model],
       generators: [generator],
       enums: [],
-    });
-    const meta = await getDMMF({ datamodel: printed });
+    })
+    const meta = await getDMMF({ datamodel: printed })
 
     expect(printed).toContain(
-      printModelIndexes([
-        { fields: [{ name: EXAMPLE_FIELD_NAME, sort: "asc" }] },
-      ])
-    );
+      printModelIndexes([{ fields: [{ name: EXAMPLE_FIELD_NAME, sort: 'asc' }] }]),
+    )
     expect(printed).toContain(
-      printModelFullTextIndexes([
-        { fields: [{ name: EXAMPLE_OTHER_FIELD_NAME }] },
-      ])
-    );
+      printModelFullTextIndexes([{ fields: [{ name: EXAMPLE_OTHER_FIELD_NAME }] }]),
+    )
     expect(meta).toMatchObject({
       datamodel: {
         models: [
@@ -457,27 +440,27 @@ describe("printModel", () => {
             fields: [
               {
                 name: EXAMPLE_FIELD_NAME,
-                kind: "scalar",
+                kind: 'scalar',
                 isList: false,
                 isRequired: true,
                 isUnique: false,
                 isId: true,
                 isReadOnly: false,
                 hasDefaultValue: false,
-                type: "String",
+                type: 'String',
                 isGenerated: false,
                 isUpdatedAt: false,
               },
               {
                 name: EXAMPLE_OTHER_FIELD_NAME,
-                kind: "scalar",
+                kind: 'scalar',
                 isList: false,
                 isRequired: true,
                 isUnique: false,
                 isId: false,
                 isReadOnly: false,
                 hasDefaultValue: false,
-                type: "String",
+                type: 'String',
                 isGenerated: false,
                 isUpdatedAt: false,
               },
@@ -486,6 +469,6 @@ describe("printModel", () => {
           },
         ],
       },
-    });
-  });
-});
+    })
+  })
+})

@@ -4,8 +4,8 @@ import {
   createGenerator,
   createModel,
   createSchema,
-} from "../builders";
-import { print } from "../print";
+} from '../builders'
+import { print } from '../print'
 import {
   EXAMPLE_DATA_SOURCE_NAME,
   EXAMPLE_DATA_SOURCE_PROVIDER,
@@ -18,14 +18,14 @@ import {
   EXAMPLE_MODEL,
   EXAMPLE_MODEL_NAME,
   EXAMPLE_STRING_ID_FIELD,
-} from "./data";
-import { getConfig, getDMMF } from "@prisma/internals";
+} from './data'
+import { getConfig, getDMMF } from '@prisma/internals'
 
-describe("print", () => {
-  test("simple model", async () => {
-    const schema = createSchema({ models: [EXAMPLE_MODEL], enums: [] });
-    const printed = await print(schema);
-    const meta = await getDMMF({ datamodel: printed });
+describe('print', () => {
+  test('simple model', async () => {
+    const schema = createSchema({ models: [EXAMPLE_MODEL], enums: [] })
+    const printed = await print(schema)
+    const meta = await getDMMF({ datamodel: printed })
 
     expect(meta).toMatchObject({
       datamodel: {
@@ -35,14 +35,14 @@ describe("print", () => {
             fields: [
               {
                 name: EXAMPLE_FIELD_NAME,
-                kind: "scalar",
+                kind: 'scalar',
                 isList: false,
                 isRequired: true,
                 isUnique: false,
                 isId: true,
                 isReadOnly: false,
                 hasDefaultValue: false,
-                type: "String",
+                type: 'String',
                 isGenerated: false,
                 isUpdatedAt: false,
               },
@@ -50,22 +50,22 @@ describe("print", () => {
           },
         ],
       },
-    });
-  });
+    })
+  })
 
-  test("two models", async () => {
+  test('two models', async () => {
     const schema = createSchema({
       models: [
         EXAMPLE_MODEL,
         createModel({
-          name: "Order",
+          name: 'Order',
           fields: [EXAMPLE_STRING_ID_FIELD],
         }),
       ],
       enums: [],
-    });
-    const printed = await print(schema);
-    const meta = await getDMMF({ datamodel: printed });
+    })
+    const printed = await print(schema)
+    const meta = await getDMMF({ datamodel: printed })
 
     expect(meta).toMatchObject({
       datamodel: {
@@ -75,32 +75,32 @@ describe("print", () => {
             fields: [
               {
                 name: EXAMPLE_FIELD_NAME,
-                kind: "scalar",
+                kind: 'scalar',
                 isList: false,
                 isRequired: true,
                 isUnique: false,
                 isId: true,
                 isReadOnly: false,
                 hasDefaultValue: false,
-                type: "String",
+                type: 'String',
                 isGenerated: false,
                 isUpdatedAt: false,
               },
             ],
           },
           {
-            name: "Order",
+            name: 'Order',
             fields: [
               {
                 name: EXAMPLE_FIELD_NAME,
-                kind: "scalar",
+                kind: 'scalar',
                 isList: false,
                 isRequired: true,
                 isUnique: false,
                 isId: true,
                 isReadOnly: false,
                 hasDefaultValue: false,
-                type: "String",
+                type: 'String',
                 isGenerated: false,
                 isUpdatedAt: false,
               },
@@ -108,10 +108,10 @@ describe("print", () => {
           },
         ],
       },
-    });
-  });
+    })
+  })
 
-  test("single datasource", async () => {
+  test('single datasource', async () => {
     const schema = createSchema({
       models: [],
       enums: [],
@@ -120,27 +120,27 @@ describe("print", () => {
         provider: EXAMPLE_DATA_SOURCE_PROVIDER,
         url: EXAMPLE_DATA_SOURCE_URL,
       }),
-    });
-    const printed = await print(schema);
-    const config = await getConfig({ datamodel: printed });
+    })
+    const printed = await print(schema)
+    const config = await getConfig({ datamodel: printed })
 
     expect(config).toMatchObject({
       datasources: [
         {
           name: EXAMPLE_DATA_SOURCE_NAME,
-          provider: "mysql",
-          activeProvider: "mysql",
+          provider: 'mysql',
+          activeProvider: 'mysql',
           url: {
             fromEnvVar: null,
-            value: "mysql://example.com",
+            value: 'mysql://example.com',
           },
           schemas: [],
         },
       ],
-    });
-  });
+    })
+  })
 
-  test("single datasource with relationMode", async () => {
+  test('single datasource with relationMode', async () => {
     const schema = createSchema({
       models: [],
       enums: [],
@@ -148,29 +148,29 @@ describe("print", () => {
         name: EXAMPLE_DATA_SOURCE_NAME,
         provider: EXAMPLE_DATA_SOURCE_PROVIDER,
         url: EXAMPLE_DATA_SOURCE_URL,
-        relationMode: "prisma",
+        relationMode: 'prisma',
       }),
-    });
-    const printed = await print(schema);
-    const config = await getConfig({ datamodel: printed });
+    })
+    const printed = await print(schema)
+    const config = await getConfig({ datamodel: printed })
 
     expect(config).toMatchObject({
       datasources: [
         {
           name: EXAMPLE_DATA_SOURCE_NAME,
-          provider: "mysql",
-          activeProvider: "mysql",
+          provider: 'mysql',
+          activeProvider: 'mysql',
           url: {
             fromEnvVar: null,
-            value: "mysql://example.com",
+            value: 'mysql://example.com',
           },
           schemas: [],
         },
       ],
-    });
-  });
+    })
+  })
 
-  test("single generator", async () => {
+  test('single generator', async () => {
     const schema = createSchema({
       models: [],
       enums: [],
@@ -181,9 +181,9 @@ describe("print", () => {
           provider: EXAMPLE_GENERATOR_PROVIDER,
         }),
       ],
-    });
-    const printed = await print(schema);
-    const config = await getConfig({ datamodel: printed });
+    })
+    const printed = await print(schema)
+    const config = await getConfig({ datamodel: printed })
 
     expect(config).toMatchObject({
       generators: [
@@ -199,10 +199,10 @@ describe("print", () => {
           previewFeatures: [],
         },
       ],
-    });
-  });
+    })
+  })
 
-  test("single enum", async () => {
+  test('single enum', async () => {
     const schema = createSchema({
       models: [],
       enums: [
@@ -211,9 +211,9 @@ describe("print", () => {
           values: [EXAMPLE_ENUM_VALUE],
         }),
       ],
-    });
-    const printed = await print(schema);
-    const meta = await getDMMF({ datamodel: printed });
+    })
+    const printed = await print(schema)
+    const meta = await getDMMF({ datamodel: printed })
 
     expect(meta).toMatchObject({
       datamodel: {
@@ -229,6 +229,6 @@ describe("print", () => {
         ],
         models: [],
       },
-    });
-  });
-});
+    })
+  })
+})

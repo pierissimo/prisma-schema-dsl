@@ -1,5 +1,11 @@
 # @pmaltese/prisma-schema-dsl
 
+## 4.0.0
+
+### Major Changes
+
+- 1e36388: refactor(rebrand): renamed package and consolidated into 'main'
+
 ## 3.3.0
 
 ### Minor Changes

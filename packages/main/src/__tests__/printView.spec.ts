@@ -1,5 +1,5 @@
-import { createGenerator, createView } from "../builders";
-import { print, printView } from "../print";
+import { createGenerator, createView } from '../builders'
+import { print, printView } from '../print'
 import {
   EXAMPLE_DOCUMENTATION,
   EXAMPLE_FIELD_NAME,
@@ -8,33 +8,33 @@ import {
   EXAMPLE_OTHER_FIELD_NAME,
   EXAMPLE_OTHER_STRING_FIELD,
   EXAMPLE_STRING_ID_FIELD,
-} from "./data";
-import { getDMMF } from "@prisma/internals";
-import { View } from "@pmaltese/prisma-schema-dsl-types";
+} from './data'
+import { getDMMF } from '@prisma/internals'
+import { View } from '../types'
 
 const generateDMMF = async (view: View) => {
   const generator = createGenerator({
-    name: "gen",
-    provider: "prisma-client-js",
-    previewFeatures: ["views"],
-  });
+    name: 'gen',
+    provider: 'prisma-client-js',
+    previewFeatures: ['views'],
+  })
   const printed = await print({
     models: [],
     views: [view],
     generators: [generator],
     enums: [],
-  });
+  })
 
-  return getDMMF({ datamodel: printed });
-};
+  return getDMMF({ datamodel: printed })
+}
 
-describe("printView", () => {
-  it("single field", async () => {
+describe('printView', () => {
+  it('single field', async () => {
     const view = createView({
       name: EXAMPLE_MODEL_NAME,
       fields: [EXAMPLE_STRING_ID_FIELD],
-    });
-    const meta = await generateDMMF(view);
+    })
+    const meta = await generateDMMF(view)
 
     expect(meta).toMatchObject({
       datamodel: {
@@ -45,14 +45,14 @@ describe("printView", () => {
             fields: [
               {
                 name: EXAMPLE_FIELD_NAME,
-                kind: "scalar",
+                kind: 'scalar',
                 isList: false,
                 isRequired: true,
                 isUnique: false,
                 isId: true,
                 isReadOnly: false,
                 hasDefaultValue: false,
-                type: "String",
+                type: 'String',
                 isGenerated: false,
                 isUpdatedAt: false,
               },
@@ -60,16 +60,16 @@ describe("printView", () => {
           },
         ],
       },
-    });
-  });
+    })
+  })
 
-  it("single field and documentation", async () => {
+  it('single field and documentation', async () => {
     const view = createView({
       name: EXAMPLE_MODEL_NAME,
       fields: [EXAMPLE_STRING_ID_FIELD],
       documentation: EXAMPLE_DOCUMENTATION,
-    });
-    const meta = await generateDMMF(view);
+    })
+    const meta = await generateDMMF(view)
 
     expect(meta).toMatchObject({
       datamodel: {
@@ -80,31 +80,31 @@ describe("printView", () => {
             fields: [
               {
                 name: EXAMPLE_FIELD_NAME,
-                kind: "scalar",
+                kind: 'scalar',
                 isList: false,
                 isRequired: true,
                 isUnique: false,
                 isId: true,
                 isReadOnly: false,
                 hasDefaultValue: false,
-                type: "String",
+                type: 'String',
                 isGenerated: false,
                 isUpdatedAt: false,
               },
             ],
-            documentation: "Example Documentation",
+            documentation: 'Example Documentation',
           },
         ],
       },
-    });
-  });
+    })
+  })
 
-  it("two fields", async () => {
+  it('two fields', async () => {
     const view = createView({
       name: EXAMPLE_MODEL_NAME,
       fields: [EXAMPLE_STRING_ID_FIELD, EXAMPLE_OTHER_STRING_FIELD],
-    });
-    const meta = await generateDMMF(view);
+    })
+    const meta = await generateDMMF(view)
 
     expect(meta).toMatchObject({
       datamodel: {
@@ -115,27 +115,27 @@ describe("printView", () => {
             fields: [
               {
                 name: EXAMPLE_FIELD_NAME,
-                kind: "scalar",
+                kind: 'scalar',
                 isList: false,
                 isRequired: true,
                 isUnique: false,
                 isId: true,
                 isReadOnly: false,
                 hasDefaultValue: false,
-                type: "String",
+                type: 'String',
                 isGenerated: false,
                 isUpdatedAt: false,
               },
               {
                 name: EXAMPLE_OTHER_FIELD_NAME,
-                kind: "scalar",
+                kind: 'scalar',
                 isList: false,
                 isRequired: true,
                 isUnique: false,
                 isId: false,
                 isReadOnly: false,
                 hasDefaultValue: false,
-                type: "String",
+                type: 'String',
                 isGenerated: false,
                 isUpdatedAt: false,
               },
@@ -143,17 +143,17 @@ describe("printView", () => {
           },
         ],
       },
-    });
-  });
+    })
+  })
 
-  it("single field and map", async () => {
+  it('single field and map', async () => {
     const view = createView({
       name: EXAMPLE_MODEL_NAME,
       fields: [EXAMPLE_STRING_ID_FIELD],
-      documentation: "",
+      documentation: '',
       map: EXAMPLE_MODEL_MAP,
-    });
-    const meta = await generateDMMF(view);
+    })
+    const meta = await generateDMMF(view)
 
     expect(meta).toMatchObject({
       datamodel: {
@@ -164,14 +164,14 @@ describe("printView", () => {
             fields: [
               {
                 name: EXAMPLE_FIELD_NAME,
-                kind: "scalar",
+                kind: 'scalar',
                 isList: false,
                 isRequired: true,
                 isUnique: false,
                 isId: true,
                 isReadOnly: false,
                 hasDefaultValue: false,
-                type: "String",
+                type: 'String',
                 isGenerated: false,
                 isUpdatedAt: false,
               },
@@ -179,6 +179,6 @@ describe("printView", () => {
           },
         ],
       },
-    });
-  });
-});
+    })
+  })
+})

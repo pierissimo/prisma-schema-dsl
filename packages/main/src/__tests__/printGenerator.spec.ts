@@ -1,22 +1,22 @@
-import { getConfig } from "@prisma/internals";
-import { createGenerator } from "../builders";
-import { printGenerator } from "../print";
+import { getConfig } from '@prisma/internals'
+import { createGenerator } from '../builders'
+import { printGenerator } from '../print'
 import {
   EXAMPLE_BINARY_TARGET,
   EXAMPLE_GENERATOR_NAME,
   EXAMPLE_GENERATOR_OUTPUT,
   EXAMPLE_GENERATOR_PREVIEW_FEATURE,
   EXAMPLE_GENERATOR_PROVIDER,
-} from "./data";
+} from './data'
 
-describe("printGenerator", () => {
-  test("name and provider only", async () => {
+describe('printGenerator', () => {
+  test('name and provider only', async () => {
     const generator = createGenerator({
       name: EXAMPLE_GENERATOR_NAME,
       provider: EXAMPLE_GENERATOR_PROVIDER,
-    });
-    const printed = printGenerator(generator);
-    const config = await getConfig({ datamodel: printed });
+    })
+    const printed = printGenerator(generator)
+    const config = await getConfig({ datamodel: printed })
 
     expect(config).toMatchObject({
       generators: [
@@ -28,17 +28,17 @@ describe("printGenerator", () => {
           },
         },
       ],
-    });
-  });
+    })
+  })
 
-  test("output", async () => {
+  test('output', async () => {
     const generator = createGenerator({
       name: EXAMPLE_GENERATOR_NAME,
       provider: EXAMPLE_GENERATOR_PROVIDER,
       output: EXAMPLE_GENERATOR_OUTPUT,
-    });
-    const printed = printGenerator(generator);
-    const config = await getConfig({ datamodel: printed });
+    })
+    const printed = printGenerator(generator)
+    const config = await getConfig({ datamodel: printed })
 
     expect(config).toMatchObject({
       generators: [
@@ -54,18 +54,18 @@ describe("printGenerator", () => {
           },
         },
       ],
-    });
-  });
+    })
+  })
 
-  test("binary targets", async () => {
+  test('binary targets', async () => {
     const generator = createGenerator({
       name: EXAMPLE_GENERATOR_NAME,
       provider: EXAMPLE_GENERATOR_PROVIDER,
       output: null,
       binaryTargets: [EXAMPLE_BINARY_TARGET],
-    });
-    const printed = printGenerator(generator);
-    const config = await getConfig({ datamodel: printed });
+    })
+    const printed = printGenerator(generator)
+    const config = await getConfig({ datamodel: printed })
 
     expect(config).toMatchObject({
       generators: [
@@ -78,22 +78,22 @@ describe("printGenerator", () => {
           binaryTargets: [
             {
               fromEnvVar: null,
-              value: "example-binary-target",
+              value: 'example-binary-target',
             },
           ],
         },
       ],
-    });
-  });
+    })
+  })
 
-  test("preview features", async () => {
+  test('preview features', async () => {
     const generator = createGenerator({
       name: EXAMPLE_GENERATOR_NAME,
       provider: EXAMPLE_GENERATOR_PROVIDER,
       previewFeatures: [EXAMPLE_GENERATOR_PREVIEW_FEATURE],
-    });
-    const printed = printGenerator(generator);
-    const config = await getConfig({ datamodel: printed });
+    })
+    const printed = printGenerator(generator)
+    const config = await getConfig({ datamodel: printed })
 
     expect(config).toMatchObject({
       generators: [
@@ -103,9 +103,9 @@ describe("printGenerator", () => {
             fromEnvVar: null,
             value: EXAMPLE_GENERATOR_PROVIDER,
           },
-          previewFeatures: ["fullTextSearch"],
+          previewFeatures: ['fullTextSearch'],
         },
       ],
-    });
-  });
-});
+    })
+  })
+})

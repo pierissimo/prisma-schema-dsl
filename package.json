@@ -1,18 +1,23 @@
 {
-  "name": "prisma-schema-dsl",
+  "name": "prisma-schema-generator",
   "description": "",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pierissimo/prisma-schema-dsl.git"
+    "url": "git+https://github.com/pierissimo/prisma-schema-generator.git"
   },
   "keywords": [],
-  "author": "",
+  "author": {
+    "name": "Pietro Maltese",
+    "email": "maltesepiero@gmail.com",
+    "url": "https://pieromaltese.me"
+  },
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/pierissimo/prisma-schema-dsl/issues"
+    "url": "https://github.com/pierissimo/prisma-schema-generator/issues"
   },
-  "homepage": "https://github.com/pierissimo/prisma-schema-dsl#readme",
+  "homepage": "https://github.com/pierissimo/prisma-schema-generator#readme",
   "devDependencies": {
-    "@changesets/cli": "^2.26.0"
+    "@changesets/cli": "^2.26.0",
+    "prettier": "^2.2.1"
   }
 }
