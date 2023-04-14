@@ -19,6 +19,7 @@ import {
   ScalarFieldDefault,
   ScalarType,
   Schema,
+  UniqueIndex,
   UUID,
   View,
 } from './types'
@@ -76,6 +77,7 @@ export function createModel({
   map,
   indexes,
   fullTextIndexes,
+  uniqueIndexes,
 }: {
   name: string
   fields: Array<ScalarField | ObjectField>
@@ -83,6 +85,7 @@ export function createModel({
   map?: string
   indexes?: Array<Index>
   fullTextIndexes?: Array<FullTextIndex>
+  uniqueIndexes?: Array<UniqueIndex>
 }): Model {
   validateName(name)
   return {
@@ -92,6 +95,7 @@ export function createModel({
     map,
     indexes,
     fullTextIndexes,
+    uniqueIndexes,
   }
 }
 
