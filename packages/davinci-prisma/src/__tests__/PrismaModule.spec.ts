@@ -9,7 +9,7 @@ describe('PrismaModule', () => {
     jest.clearAllMocks()
   })
 
-  test('should a', async () => {
+  test('should correctly register and perform the prisma schema generation', async () => {
     @prisma.model()
     class Customer {
       @prisma.field({ isId: true, required: true })

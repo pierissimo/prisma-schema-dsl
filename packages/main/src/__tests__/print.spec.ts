@@ -5,7 +5,7 @@ import {
   createModel,
   createSchema,
 } from '../builders'
-import { print } from '../print'
+import { print, printDataSourceURL } from '../print'
 import {
   EXAMPLE_DATA_SOURCE_NAME,
   EXAMPLE_DATA_SOURCE_PROVIDER,
@@ -168,6 +168,40 @@ describe('print', () => {
         },
       ],
     })
+  })
+
+  test('single datasource with shadowDatabaseUrl', async () => {
+    const schema = createSchema({
+      models: [],
+      enums: [],
+      dataSource: createDataSource({
+        name: EXAMPLE_DATA_SOURCE_NAME,
+        provider: EXAMPLE_DATA_SOURCE_PROVIDER,
+        url: EXAMPLE_DATA_SOURCE_URL,
+        shadowDatabaseUrl: EXAMPLE_DATA_SOURCE_URL,
+        relationMode: 'prisma',
+      }),
+    })
+    const printed = await print(schema)
+    const config = await getConfig({ datamodel: printed })
+
+    expect(config).toMatchObject({
+      datasources: [
+        {
+          name: EXAMPLE_DATA_SOURCE_NAME,
+          provider: 'mysql',
+          activeProvider: 'mysql',
+          url: {
+            fromEnvVar: null,
+            value: 'mysql://example.com',
+          },
+          schemas: [],
+        },
+      ],
+    })
+    expect(printed).toContain(
+      `shadowDatabaseUrl = ${printDataSourceURL(schema.dataSource?.shadowDatabaseUrl ?? '')}`,
+    )
   })
 
   test('single generator', async () => {

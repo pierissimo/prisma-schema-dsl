@@ -1,5 +1,11 @@
 # @pmaltese/prisma-schema-dsl
 
+## 5.0.0
+
+### Major Changes
+
+- cf79703: refactor datasource url arguments
+
 ## 4.1.1
 
 ### Patch Changes

@@ -1,5 +1,16 @@
 # @pmaltese/davinci-prisma
 
+## 1.0.0
+
+### Major Changes
+
+- cf79703: refactor datasource url arguments
+
+### Patch Changes
+
+- Updated dependencies [cf79703]
+  - @pmaltese/prisma-schema-generator@5.0.0
+
 ## 0.2.1
 
 ### Patch Changes

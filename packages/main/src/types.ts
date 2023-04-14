@@ -13,11 +13,11 @@ export enum DataSourceProvider {
  * @see https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-schema/data-sources#examples
  */
 export interface DataSourceURLEnv {
-  name: string
+  envVariableName: string
 }
 
 export function isDataSourceURLEnv(url: string | DataSourceURLEnv): url is DataSourceURLEnv {
-  return (url as DataSourceURLEnv).name !== undefined
+  return (url as DataSourceURLEnv).envVariableName !== undefined
 }
 
 /**
@@ -28,6 +28,7 @@ export type DataSource = {
   name: string
   provider: DataSourceProvider
   url: string | DataSourceURLEnv
+  shadowDatabaseUrl?: string | DataSourceURLEnv
   relationMode?: 'foreignKeys' | 'prisma'
 }
 
