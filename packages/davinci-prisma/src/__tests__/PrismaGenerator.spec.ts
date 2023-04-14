@@ -126,8 +126,12 @@ describe('PrismaGenerator', () => {
     })
   })
 
-  test('Models - should correctly generate the relations', async () => {
-    @prisma.model()
+  test('Models - should correctly generate the relations and indexes', async () => {
+    @prisma.model({
+      indexes: [{ fields: [{ name: 'id', sort: 'asc' }] }],
+      uniqueIndexes: [{ fields: [{ name: 'id' }] }],
+      fullTextIndexes: [{ fields: [{ name: 'firstname' }, { name: 'lastname' }] }],
+    })
     class Customer {
       @prisma.field({ required: true, isId: true })
       id: string
@@ -189,6 +193,37 @@ describe('PrismaGenerator', () => {
               relationToReferences: [],
               relationOnDelete: 'NONE',
               relationOnUpdate: 'NONE',
+            },
+          ],
+          indexes: [
+            {
+              fields: [
+                {
+                  name: 'id',
+                  sort: 'asc',
+                },
+              ],
+            },
+          ],
+          fullTextIndexes: [
+            {
+              fields: [
+                {
+                  name: 'firstname',
+                },
+                {
+                  name: 'lastname',
+                },
+              ],
+            },
+          ],
+          uniqueIndexes: [
+            {
+              fields: [
+                {
+                  name: 'id',
+                },
+              ],
             },
           ],
         },

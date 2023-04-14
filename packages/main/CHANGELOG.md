@@ -1,5 +1,11 @@
 # @pmaltese/prisma-schema-dsl
 
+## 4.1.1
+
+### Patch Changes
+
+- 98b696f: feat(uniqueIndexes): added support for unique indexes
+
 ## 4.1.0
 
 ### Minor Changes

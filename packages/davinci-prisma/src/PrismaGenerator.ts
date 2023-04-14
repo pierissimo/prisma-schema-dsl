@@ -113,6 +113,7 @@ export class PrismaGenerator {
           fields,
           map: modelDecorator.data?.map,
           indexes: modelDecorator.data?.indexes,
+          uniqueIndexes: modelDecorator.data?.uniqueIndexes,
           fullTextIndexes: modelDecorator.data?.fullTextIndexes,
         })
       : createView({

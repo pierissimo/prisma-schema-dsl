@@ -156,6 +156,11 @@ export type FullTextIndex = {
   fields: Array<{ name: string }>
 }
 
+export type UniqueIndex = {
+  fields: Array<{ name: string; sort?: 'desc' | 'asc' }>
+  name?: string
+}
+
 export type Model = {
   name: string
   fields: Array<ScalarField | ObjectField>
@@ -165,6 +170,7 @@ export type Model = {
   documentation?: string
   indexes?: Array<Index>
   fullTextIndexes?: Array<FullTextIndex>
+  uniqueIndexes?: Array<UniqueIndex>
 }
 
 export type Enum = {

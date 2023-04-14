@@ -1,5 +1,13 @@
 # @pmaltese/davinci-prisma
 
+## 0.2.1
+
+### Patch Changes
+
+- 98b696f: feat(uniqueIndexes): added support for unique indexes
+- Updated dependencies [98b696f]
+  - @pmaltese/prisma-schema-generator@4.1.1
+
 ## 0.2.0
 
 ### Minor Changes

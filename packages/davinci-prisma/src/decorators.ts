@@ -8,6 +8,7 @@ import {
   NOW,
   ReferentialActions,
   ScalarType,
+  UniqueIndex,
   UUID,
 } from '@pmaltese/prisma-schema-generator'
 
@@ -71,6 +72,7 @@ export interface ModelDecoratorMeta {
     name?: string
     map?: string
     indexes?: Array<Index>
+    uniqueIndexes?: Array<UniqueIndex>
     fullTextIndexes?: Array<FullTextIndex>
   }
 }
@@ -79,6 +81,7 @@ export const model = (data?: {
   name?: string
   map?: string
   indexes?: Array<Index>
+  uniqueIndexes?: Array<UniqueIndex>
   fullTextIndexes?: Array<FullTextIndex>
 }) =>
   decorate({ [DecoratorId]: 'davinci.prisma.model', data }, ['Class'], {

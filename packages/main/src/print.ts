@@ -17,6 +17,7 @@ import {
   ScalarField,
   ScalarFieldDefault,
   Schema,
+  UniqueIndex,
   View,
 } from './types'
 import { formatSchema } from '@prisma/internals'
@@ -134,13 +135,16 @@ export function printModel(
   const fieldTexts = model.fields.map((field) => printField(field, provider)).join('\n')
   const map = model.map ? printModelMap(model.map, true) : ''
   const indexes = model.indexes ? printModelIndexes(model.indexes, true) : ''
+  const uniqueIndexes = model.uniqueIndexes
+    ? printModelUniqueIndexes(model.uniqueIndexes, true)
+    : ''
   const fullTextIndexes = model.fullTextIndexes
     ? printModelFullTextIndexes(model.fullTextIndexes, true)
     : ''
 
   return withDocumentation(
     model.documentation,
-    `model ${model.name} {\n${fieldTexts}${map}${indexes}${fullTextIndexes}\n}`,
+    `model ${model.name} {\n${fieldTexts}${map}${indexes}${uniqueIndexes}${fullTextIndexes}\n}`,
   )
 }
 
@@ -297,6 +301,33 @@ export function printModelIndexes(indexes: Array<Index>, prependNewLines = false
       const fields = `fields: [${fieldList}]`
 
       return `${prefix}@@index(${fields})`
+    })
+    .join('\n')
+}
+
+export function printModelUniqueIndexes(
+  uniqueIndexes: Array<UniqueIndex>,
+  prependNewLines = false,
+) {
+  const prefix = prependNewLines ? '\n\n' : ''
+
+  return uniqueIndexes
+    .map((uniqueIndex) => {
+      const fieldList = uniqueIndex.fields.map((field) => {
+        let f = field.name
+        const fieldArgs = safeMergeArguments([
+          field.sort ? `sort: ${field.sort.charAt(0).toUpperCase() + field.sort.slice(1)}` : '',
+        ])
+
+        f += fieldArgs ? `(${fieldArgs})` : ''
+        return f
+      })
+
+      const fields = `fields: [${fieldList}]`
+      const name = uniqueIndex.name ? `name: "${uniqueIndex.name}"` : ''
+      const args = safeMergeArguments([fields, name])
+
+      return `${prefix}@@unique(${args})`
     })
     .join('\n')
 }
