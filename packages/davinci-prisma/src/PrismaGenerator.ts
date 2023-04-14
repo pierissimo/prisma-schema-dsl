@@ -6,7 +6,6 @@ import {
   createSchema,
   createView,
   DataSource,
-  DataSourceProvider,
   Enum,
   Generator,
   Model,
@@ -133,25 +132,13 @@ export class PrismaGenerator {
     }
   }
 
-  public setDatasource({
-    name,
-    provider,
-    url,
-    environmentVariable,
-  }: {
-    name: string
-    provider: DataSourceProvider
-    url?: string
-    environmentVariable?: string
-  }) {
-    if (!url && !environmentVariable) {
-      throw new Error('You must set either the url or environmentVariable')
-    }
-
+  public setDatasource({ name, provider, url, shadowDatabaseUrl, relationMode }: DataSource) {
     this.datasource = createDataSource({
       name,
       provider,
-      url: url || (environmentVariable ? { name: environmentVariable } : ''),
+      url,
+      shadowDatabaseUrl,
+      relationMode,
     })
 
     return this

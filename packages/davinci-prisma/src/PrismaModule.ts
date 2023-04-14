@@ -2,7 +2,7 @@ import { App, Module } from '@davinci/core'
 import { ClassType } from '@davinci/reflector'
 import fs from 'fs/promises'
 import pathLib from 'path'
-import { DataSourceProvider, Enum, Generator, Schema } from '@pmaltese/prisma-schema-generator'
+import { DataSource, Enum, Generator, Schema } from '@pmaltese/prisma-schema-generator'
 import { exec } from 'child_process'
 import { Logger } from 'pino'
 import { PrismaGenerator } from './PrismaGenerator'
@@ -16,12 +16,7 @@ interface PrismaModuleOptions {
   clientGeneration?: {
     enabled: boolean
   }
-  datasource: {
-    name: string
-    provider: DataSourceProvider
-    url?: string
-    environmentVariable?: string
-  }
+  datasource: DataSource
   generators?: Array<Generator>
   enums?: Array<Enum>
 }

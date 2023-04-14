@@ -63,14 +63,19 @@ export function printDataSource(dataSource: DataSource): string {
   const relationMode = dataSource.relationMode
     ? `\nrelationMode = "${dataSource.relationMode}"`
     : ''
+
+  const shadowDatabaseUrl = dataSource.shadowDatabaseUrl
+    ? `shadowDatabaseUrl = ${printDataSourceURL(dataSource.shadowDatabaseUrl)}`
+    : ''
   return `datasource ${dataSource.name} {
   provider = "${dataSource.provider}"
   url      = ${url}${relationMode}
+  ${shadowDatabaseUrl}
 }`
 }
 
-function printDataSourceURL(url: string | DataSourceURLEnv): string {
-  return isDataSourceURLEnv(url) ? `env("${url.name}")` : `"${url}"`
+export function printDataSourceURL(url: string | DataSourceURLEnv): string {
+  return isDataSourceURLEnv(url) ? `env("${url.envVariableName}")` : `"${url}"`
 }
 
 export function printGenerator(generator: Generator): string {

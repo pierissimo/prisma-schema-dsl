@@ -285,17 +285,20 @@ export function createDataSource({
   name,
   provider,
   url,
+  shadowDatabaseUrl,
   relationMode,
 }: {
   name: string
   provider: DataSourceProvider
   url: string | DataSourceURLEnv
+  shadowDatabaseUrl?: string | DataSourceURLEnv
   relationMode?: DataSource['relationMode']
 }): DataSource {
   return {
     name,
     provider,
     url,
+    shadowDatabaseUrl,
     relationMode,
   }
 }
