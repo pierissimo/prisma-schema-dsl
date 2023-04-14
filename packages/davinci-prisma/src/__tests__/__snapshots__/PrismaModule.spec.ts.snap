@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`PrismaModule should a 1`] = `
+exports[`PrismaModule should correctly register and perform the prisma schema generation 1`] = `
 "datasource postgres {
   provider = \\"postgresql\\"
   url      = \\"postgresql://\\"

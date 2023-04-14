@@ -257,7 +257,7 @@ describe('PrismaGenerator', () => {
     const { schema } = await prismaGenerator
       .setDatasource({
         name: 'myDatasource',
-        environmentVariable: 'DB_URL',
+        url: { envVariableName: 'DB_URL' },
         provider: DataSourceProvider.PostgreSQL,
       })
       .generate()
@@ -267,7 +267,7 @@ describe('PrismaGenerator', () => {
         name: 'myDatasource',
         provider: 'postgresql',
         url: {
-          name: 'DB_URL',
+          envVariableName: 'DB_URL',
         },
       },
     })
@@ -350,7 +350,7 @@ describe('PrismaGenerator', () => {
       ])
       .setDatasource({
         name: 'myDatasource',
-        environmentVariable: 'DB_URL',
+        url: { envVariableName: 'DB_URL' },
         provider: DataSourceProvider.PostgreSQL,
       })
       .reflectModels([Customer, CustomerToken])
