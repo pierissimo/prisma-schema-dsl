@@ -6,3 +6,5 @@ export const prisma = {
 
 export * from './PrismaGenerator'
 export * from './PrismaModule'
+export * from './helpers'
+export * from './types'

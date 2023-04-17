@@ -22,7 +22,7 @@ import {
   ModelDecoratorMeta,
   ObjectDecoratorOptions,
   ScalarDecoratorOptions,
-} from './decorators'
+} from './types'
 
 const scalarTypes = Object.values(ScalarType)
 
