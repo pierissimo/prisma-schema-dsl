@@ -1,5 +1,11 @@
 # @pmaltese/davinci-prisma
 
+## 1.1.0
+
+### Minor Changes
+
+- c6c0977: export types and helpers
+
 ## 1.0.0
 
 ### Major Changes
