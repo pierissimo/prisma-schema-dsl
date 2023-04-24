@@ -4,7 +4,7 @@ import {
   printModel,
   printModelFullTextIndexes,
   printModelIndexes,
-  printModelUniqueIndexes,
+  printUniqueIndexes,
 } from '../print'
 import { DataSourceProvider } from '../types'
 import { getDMMF } from '@prisma/internals'
@@ -308,7 +308,7 @@ describe('printModel', () => {
     const meta = await getDMMF({ datamodel: printed })
 
     expect(printed).toContain(
-      printModelUniqueIndexes([{ fields: [{ name: EXAMPLE_FIELD_NAME, sort: 'asc' }] }]),
+      printUniqueIndexes([{ fields: [{ name: EXAMPLE_FIELD_NAME, sort: 'asc' }] }]),
     )
     expect(meta).toMatchObject({
       datamodel: {
@@ -360,7 +360,7 @@ describe('printModel', () => {
     const meta = await getDMMF({ datamodel: printed })
 
     expect(printed).toContain(
-      printModelUniqueIndexes([
+      printUniqueIndexes([
         {
           name: 'customUniqueIndexName',
           fields: [

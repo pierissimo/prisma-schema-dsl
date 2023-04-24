@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`PrismaModule should correctly register and perform the prisma schema generation 1`] = `
+exports[`PrismaModule should correctly register and perform the prisma schema generation for a model 1`] = `
 "datasource postgres {
   provider = \\"postgresql\\"
   url      = \\"postgresql://\\"
@@ -14,6 +14,27 @@ generator client {
 model Customer {
   id   String @id
   name String
+}
+"
+`;
+
+exports[`PrismaModule should correctly register and perform the prisma schema generation for a view 1`] = `
+"datasource postgres {
+  provider = \\"postgresql\\"
+  url      = \\"postgresql://\\"
+}
+
+generator client {
+  provider        = \\"prisma-client-js\\"
+  previewFeatures = [\\"fullTextSearch\\", \\"fullTextIndex\\", \\"clientExtensions\\"]
+}
+
+view CustomerView {
+  firstname String
+  lastname  String
+
+  @@unique(fields: [firstname, lastname])
+  @@map(\\"customer_view\\")
 }
 "
 `;

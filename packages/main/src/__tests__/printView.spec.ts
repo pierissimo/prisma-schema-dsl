@@ -1,5 +1,5 @@
 import { createGenerator, createView } from '../builders'
-import { print, printView } from '../print'
+import { print, printUniqueIndexes, printView } from '../print'
 import {
   EXAMPLE_DOCUMENTATION,
   EXAMPLE_FIELD_NAME,
@@ -174,6 +174,109 @@ describe('printView', () => {
                 type: 'String',
                 isGenerated: false,
                 isUpdatedAt: false,
+              },
+            ],
+          },
+        ],
+      },
+    })
+  })
+
+  it('two fields and one unique index', async () => {
+    const view = createView({
+      name: EXAMPLE_MODEL_NAME,
+      fields: [EXAMPLE_STRING_ID_FIELD, EXAMPLE_OTHER_STRING_FIELD],
+      uniqueIndexes: [{ fields: [{ name: EXAMPLE_FIELD_NAME, sort: 'asc' }] }],
+    })
+    const printed = printView(view)
+    const meta = await generateDMMF(view)
+
+    expect(printed).toContain(
+      printUniqueIndexes([{ fields: [{ name: EXAMPLE_FIELD_NAME, sort: 'asc' }] }]),
+    )
+    expect(meta).toMatchObject({
+      datamodel: {
+        models: [
+          {
+            name: EXAMPLE_MODEL_NAME,
+            dbName: null,
+            fields: [
+              {
+                name: EXAMPLE_FIELD_NAME,
+                kind: 'scalar',
+                isUnique: false,
+              },
+              {
+                name: EXAMPLE_OTHER_FIELD_NAME,
+                kind: 'scalar',
+                isUnique: false,
+              },
+            ],
+            uniqueFields: [[EXAMPLE_FIELD_NAME]],
+            uniqueIndexes: [
+              {
+                name: null,
+                fields: [EXAMPLE_FIELD_NAME],
+              },
+            ],
+          },
+        ],
+      },
+    })
+  })
+
+  it('two fields and two unique indexes', async () => {
+    const view = createView({
+      name: EXAMPLE_MODEL_NAME,
+      fields: [EXAMPLE_STRING_ID_FIELD, EXAMPLE_OTHER_STRING_FIELD],
+      documentation: '',
+      uniqueIndexes: [
+        {
+          name: 'customUniqueIndexName',
+          fields: [
+            { name: EXAMPLE_FIELD_NAME, sort: 'desc' },
+            { name: EXAMPLE_OTHER_FIELD_NAME, sort: 'asc' },
+          ],
+        },
+      ],
+    })
+    const printed = printView(view)
+    const meta = await generateDMMF(view)
+
+    expect(printed).toContain(
+      printUniqueIndexes([
+        {
+          name: 'customUniqueIndexName',
+          fields: [
+            { name: EXAMPLE_FIELD_NAME, sort: 'desc' },
+            { name: EXAMPLE_OTHER_FIELD_NAME, sort: 'asc' },
+          ],
+        },
+      ]),
+    )
+    expect(meta).toMatchObject({
+      datamodel: {
+        models: [
+          {
+            name: EXAMPLE_MODEL_NAME,
+            dbName: null,
+            fields: [
+              {
+                name: 'exampleFieldName',
+                kind: 'scalar',
+                isUnique: false,
+              },
+              {
+                name: 'exampleOtherFieldName',
+                kind: 'scalar',
+                isUnique: false,
+              },
+            ],
+            uniqueFields: [['exampleFieldName', 'exampleOtherFieldName']],
+            uniqueIndexes: [
+              {
+                name: 'customUniqueIndexName',
+                fields: ['exampleFieldName', 'exampleOtherFieldName'],
               },
             ],
           },

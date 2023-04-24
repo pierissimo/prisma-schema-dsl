@@ -140,9 +140,7 @@ export function printModel(
   const fieldTexts = model.fields.map((field) => printField(field, provider)).join('\n')
   const map = model.map ? printModelMap(model.map, true) : ''
   const indexes = model.indexes ? printModelIndexes(model.indexes, true) : ''
-  const uniqueIndexes = model.uniqueIndexes
-    ? printModelUniqueIndexes(model.uniqueIndexes, true)
-    : ''
+  const uniqueIndexes = model.uniqueIndexes ? printUniqueIndexes(model.uniqueIndexes, true) : ''
   const fullTextIndexes = model.fullTextIndexes
     ? printModelFullTextIndexes(model.fullTextIndexes, true)
     : ''
@@ -165,8 +163,12 @@ export function printView(
 ): string {
   const fieldTexts = view.fields.map((field) => printField(field, provider)).join('\n')
   const map = view.map ? printModelMap(view.map, true) : ''
+  const uniqueIndexes = view.uniqueIndexes ? printUniqueIndexes(view.uniqueIndexes, true) : ''
 
-  return withDocumentation(view.documentation, `view ${view.name} {\n${fieldTexts}${map}\n}`)
+  return withDocumentation(
+    view.documentation,
+    `view ${view.name} {\n${fieldTexts}${map}${uniqueIndexes}\n}`,
+  )
 }
 
 /**
@@ -310,10 +312,7 @@ export function printModelIndexes(indexes: Array<Index>, prependNewLines = false
     .join('\n')
 }
 
-export function printModelUniqueIndexes(
-  uniqueIndexes: Array<UniqueIndex>,
-  prependNewLines = false,
-) {
+export function printUniqueIndexes(uniqueIndexes: Array<UniqueIndex>, prependNewLines = false) {
   const prefix = prependNewLines ? '\n\n' : ''
 
   return uniqueIndexes
