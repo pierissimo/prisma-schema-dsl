@@ -1,5 +1,11 @@
 # @pmaltese/prisma-schema-dsl
 
+## 5.1.0
+
+### Minor Changes
+
+- bdbcf8f: View: added support for 'unique' block
+
 ## 5.0.0
 
 ### Major Changes
