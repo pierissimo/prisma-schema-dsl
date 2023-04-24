@@ -1,5 +1,16 @@
 # @pmaltese/davinci-prisma
 
+## 1.2.0
+
+### Minor Changes
+
+- bdbcf8f: View: added support for 'unique' block
+
+### Patch Changes
+
+- Updated dependencies [bdbcf8f]
+  - @pmaltese/prisma-schema-generator@5.1.0
+
 ## 1.1.0
 
 ### Minor Changes

@@ -149,15 +149,15 @@ export type ObjectField = BaseField & {
   relationOnUpdate?: ReferentialActions
 }
 
-export type Index = {
+export interface Index {
   fields: Array<{ name: string; sort?: 'desc' | 'asc' }>
 }
 
-export type FullTextIndex = {
+export interface FullTextIndex {
   fields: Array<{ name: string }>
 }
 
-export type UniqueIndex = {
+export interface UniqueIndex {
   fields: Array<{ name: string; sort?: 'desc' | 'asc' }>
   name?: string
 }
@@ -188,6 +188,7 @@ export type View = {
   map?: string
   /** @see https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-schema#comments */
   documentation?: string
+  uniqueIndexes?: Array<UniqueIndex>
 }
 
 export type Schema = {

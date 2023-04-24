@@ -119,6 +119,7 @@ export class PrismaGenerator {
           name: modelDecorator.data?.name ?? classReflection.name,
           fields,
           map: modelDecorator.data?.map,
+          uniqueIndexes: modelDecorator.data?.uniqueIndexes,
         })
     if (isModel) {
       this.classToModelMap.set(classType, entity)

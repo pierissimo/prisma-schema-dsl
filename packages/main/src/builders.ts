@@ -105,20 +105,21 @@ export function createView({
   fields,
   documentation,
   map,
+  uniqueIndexes,
 }: {
   name: string
   fields: Array<ScalarField | ObjectField>
   documentation?: string
   map?: string
-  indexes?: Array<Index>
-  fullTextIndexes?: Array<FullTextIndex>
-}): Model {
+  uniqueIndexes?: Array<UniqueIndex>
+}): View {
   validateName(name)
   return {
     name,
     fields,
     documentation,
     map,
+    uniqueIndexes,
   }
 }
 

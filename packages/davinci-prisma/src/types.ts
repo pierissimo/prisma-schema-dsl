@@ -64,5 +64,6 @@ export interface ViewDecoratorMeta {
   data?: {
     name?: string
     map?: string
+    uniqueIndexes?: Array<UniqueIndex>
   }
 }
