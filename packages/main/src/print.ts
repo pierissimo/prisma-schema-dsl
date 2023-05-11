@@ -11,6 +11,7 @@ import {
   Index,
   isCallExpression,
   isDataSourceURLEnv,
+  isFunction,
   Model,
   ObjectField,
   ReferentialActions,
@@ -223,7 +224,7 @@ function printScalarField(field: ScalarField, provider: DataSourceProvider): str
 function printScalarDefault(value: ScalarFieldDefault): string {
   // String, JSON and DateTime
   if (typeof value === 'string') {
-    return value
+    return `"${value}"`
   }
   if (typeof value === 'boolean') {
     return String(value)
@@ -233,6 +234,9 @@ function printScalarDefault(value: ScalarFieldDefault): string {
   }
   if (isCallExpression(value)) {
     return `${value.callee}()`
+  }
+  if (isFunction(value)) {
+    return printScalarDefault(value())
   }
   throw new Error(`Invalid value: ${value}`)
 }

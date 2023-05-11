@@ -10,6 +10,7 @@ import {
   Generator,
   Index,
   isCallExpression,
+  isFunction,
   Model,
   NOW,
   ObjectField,
@@ -172,6 +173,11 @@ function validateScalarDefault(type: ScalarType, value: ScalarFieldDefault) {
   if (value === null) {
     return
   }
+
+  if (isFunction(value)) {
+    return
+  }
+
   switch (type) {
     case ScalarType.String: {
       if (

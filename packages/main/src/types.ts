@@ -114,6 +114,10 @@ export function isCallExpression(object: unknown): object is CallExpression {
   return (object as CallExpression).callee !== undefined
 }
 
+export function isFunction(value: unknown): value is Function {
+  return typeof value === 'function'
+}
+
 export enum FieldKind {
   Scalar = 'scalar',
   Object = 'object',
@@ -127,7 +131,8 @@ export type BaseField = {
   documentation?: string
 }
 
-export type ScalarFieldDefault = null | boolean | CallExpression | number | string
+type ScalarFieldDefaultSimple = null | boolean | CallExpression | number | string
+export type ScalarFieldDefault = ScalarFieldDefaultSimple | (() => ScalarFieldDefaultSimple)
 
 export type ScalarField = BaseField & {
   kind: FieldKind.Scalar

@@ -1,19 +1,14 @@
 import { DecoratorId, TypeValue } from '@davinci/reflector'
-import { DefaultValueFunctions } from './helpers'
 import {
   FullTextIndex,
   Index,
   ReferentialActions,
+  ScalarFieldDefault,
   ScalarType,
   UniqueIndex,
 } from '@pmaltese/prisma-schema-generator'
 
-type DefaultValue =
-  | null
-  | boolean
-  | number
-  | string
-  | (typeof DefaultValueFunctions)[keyof typeof DefaultValueFunctions]
+type DefaultValue = ScalarFieldDefault
 
 export interface ScalarDecoratorOptions {
   name?: string

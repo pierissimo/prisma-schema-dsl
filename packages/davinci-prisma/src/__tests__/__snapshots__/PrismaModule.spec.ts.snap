@@ -12,8 +12,9 @@ generator client {
 }
 
 model Customer {
-  id   String @id
-  name String
+  id      String   @id
+  name    String
+  isAdult Boolean? @default(true)
 }
 "
 `;

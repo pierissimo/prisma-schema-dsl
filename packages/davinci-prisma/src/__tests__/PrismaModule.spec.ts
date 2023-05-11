@@ -17,6 +17,9 @@ describe('PrismaModule', () => {
 
       @prisma.field({ required: true })
       name: string
+
+      @prisma.field({ defaultValue: true })
+      isAdult?: boolean
     }
 
     const prismaModule = new PrismaModule({

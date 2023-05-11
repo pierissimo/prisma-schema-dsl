@@ -133,6 +133,18 @@ describe('printField', () => {
     )
   })
 
+  test('default value: string with default', () => {
+    const field = createScalarField({
+      name: EXAMPLE_FIELD_NAME,
+      type: ScalarType.String,
+      isRequired: true,
+      defaultValue: 'hey there',
+    })
+    expect(printField(field, POSTGRES_SQL_PROVIDER)).toBe(
+      `${EXAMPLE_FIELD_NAME} ${ScalarType.String} @default("hey there")`,
+    )
+  })
+
   test('default value: string with uuid()', () => {
     const field = createScalarField({
       name: EXAMPLE_FIELD_NAME,
@@ -157,6 +169,18 @@ describe('printField', () => {
     )
   })
 
+  test('default value: boolean with default', () => {
+    const field = createScalarField({
+      name: EXAMPLE_FIELD_NAME,
+      type: ScalarType.Boolean,
+      isRequired: true,
+      defaultValue: true,
+    })
+    expect(printField(field, POSTGRES_SQL_PROVIDER)).toBe(
+      `${EXAMPLE_FIELD_NAME} ${ScalarType.Boolean} @default(true)`,
+    )
+  })
+
   test('default value: datetime with now()', () => {
     const field = createScalarField({
       name: EXAMPLE_FIELD_NAME,
@@ -169,19 +193,16 @@ describe('printField', () => {
     )
   })
 
-  test('boolean field with default value', () => {
+  test('default value: factory function', () => {
     const field = createScalarField({
       name: EXAMPLE_FIELD_NAME,
-      type: ScalarType.Boolean,
-      isList: false,
+      type: ScalarType.String,
       isRequired: true,
-      isUnique: false,
-      isId: false,
-      isUpdatedAt: false,
-      defaultValue: true,
+      defaultValue: () => 'hey there',
     })
-    const expected = `${EXAMPLE_FIELD_NAME} ${ScalarType.Boolean} @default(true)`
-    expect(printField(field, POSTGRES_SQL_PROVIDER)).toBe(expected)
+    expect(printField(field, POSTGRES_SQL_PROVIDER)).toBe(
+      `${EXAMPLE_FIELD_NAME} ${ScalarType.String} @default("hey there")`,
+    )
   })
 
   test('simple object field', () => {
