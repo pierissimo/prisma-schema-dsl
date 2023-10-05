@@ -1,5 +1,11 @@
 # @pmaltese/prisma-schema-dsl
 
+## 5.2.1
+
+### Patch Changes
+
+- a5b1120: Manual version bump
+
 ## 5.2.0
 
 ### Minor Changes
