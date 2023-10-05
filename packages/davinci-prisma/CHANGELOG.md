@@ -6,12 +6,6 @@
 
 - 816bf1e: Added support for native mappings
 
-## 1.3.2
-
-### Patch Changes
-
-- 931b513: Manual Version Bump
-
 ## 1.3.1
 
 ### Patch Changes
