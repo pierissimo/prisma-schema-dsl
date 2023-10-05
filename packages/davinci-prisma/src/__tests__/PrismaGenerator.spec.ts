@@ -319,6 +319,9 @@ describe('PrismaGenerator', () => {
       @prisma.field({ required: true })
       lastname: string
 
+      @prisma.field({ nativeMapping: { name: 'VarChar', arguments: [10000] } })
+      storyOfHisLife?: string
+
       @prisma.field({
         type: 'CustomerToken',
         isList: true,

@@ -73,6 +73,7 @@ export class PrismaGenerator {
             field = createScalarField({
               name: fieldName,
               type: prismaTypeDefinition.type as ScalarType,
+              nativeMapping: fieldDecoratorData?.nativeMapping,
               isList: fieldDecoratorData?.isList ?? isArray,
               isRequired: fieldDecoratorData?.required,
               isUnique: fieldDecoratorData?.isUnique,
@@ -87,6 +88,7 @@ export class PrismaGenerator {
             field = createObjectField({
               name: fieldName,
               type: prismaTypeDefinition.type as ScalarType,
+              nativeMapping: fieldDecoratorData?.nativeMapping,
               isList: fieldDecoratorData?.isList ?? isArray,
               isRequired: fieldDecoratorData?.required,
               relationName: fieldDecoratorData?.relationName,

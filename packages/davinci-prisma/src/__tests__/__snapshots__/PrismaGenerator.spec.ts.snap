@@ -12,10 +12,11 @@ generator client1 {
 }
 
 model Customer {
-  id        String          @id
-  firstname String
-  lastname  String
-  tokens    CustomerToken[]
+  id             String          @id
+  firstname      String
+  lastname       String
+  storyOfHisLife String?         @db.VarChar(10000)
+  tokens         CustomerToken[]
 }
 
 model CustomerToken {
