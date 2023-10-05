@@ -1,5 +1,16 @@
 # @pmaltese/davinci-prisma
 
+## 1.3.0
+
+### Minor Changes
+
+- f26da0f: Added support for specifying native mappings
+
+### Patch Changes
+
+- Updated dependencies [f26da0f]
+  - @pmaltese/prisma-schema-generator@5.2.0
+
 ## 1.2.0
 
 ### Minor Changes

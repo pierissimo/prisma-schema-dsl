@@ -1,5 +1,11 @@
 # @pmaltese/prisma-schema-dsl
 
+## 5.2.0
+
+### Minor Changes
+
+- f26da0f: Added support for specifying native mappings
+
 ## 5.1.0
 
 ### Minor Changes

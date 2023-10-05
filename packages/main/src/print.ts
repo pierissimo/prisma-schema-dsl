@@ -207,6 +207,12 @@ function printScalarField(field: ScalarField, provider: DataSourceProvider): str
   if (field.isUpdatedAt) {
     attributes.push('@updatedAt')
   }
+  if (field.nativeMapping) {
+    let baseAttribute = field.nativeMapping.name
+    const args = field.nativeMapping.arguments
+    const attribute = `@db.${baseAttribute}${args ? `(${safeMergeArguments(args)})` : ''}`
+    attributes.push(attribute)
+  }
   if (field.default) {
     if (!isMongoDBProvider || !field.isId) {
       attributes.push(`@default(${printScalarDefault(field.default)})`)
@@ -250,6 +256,12 @@ function printObjectField(field: ObjectField): string {
     relation.references = field.relationToReferences
   }
   const attributes: string[] = []
+  if (field.nativeMapping) {
+    let baseAttribute = field.nativeMapping.name
+    const args = field.nativeMapping.arguments
+    const attribute = `@db.${baseAttribute}${args ? `(${safeMergeArguments(args)})` : ''}`
+    attributes.push(attribute)
+  }
   if (!isEmpty(relation)) {
     attributes.push(printRelation(relation, field))
   }
@@ -352,6 +364,6 @@ export function printModelFullTextIndexes(
     .join('\n')
 }
 
-function safeMergeArguments(args: Array<string | null | undefined>) {
+function safeMergeArguments(args: Array<string | null | undefined | unknown>) {
   return args.filter((a) => !!a).join(', ')
 }

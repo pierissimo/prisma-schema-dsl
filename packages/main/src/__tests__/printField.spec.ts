@@ -9,6 +9,8 @@ import {
   EXAMPLE_RELATION_NAME,
   EXAMPLE_RELATION_REFERENCE_FIELD_NAME,
   EXAMPLE_STRING_FIELD,
+  EXAMPLE_STRING_FIELD_WITH_NATIVE_MAPPING,
+  EXAMPLE_STRING_FIELD_WITH_NATIVE_MAPPING_WITH_ARGS,
   POSTGRES_SQL_PROVIDER,
 } from './data'
 
@@ -92,6 +94,21 @@ describe('printField', () => {
     expect(printField(field, POSTGRES_SQL_PROVIDER)).toBe(
       `${EXAMPLE_FIELD_NAME} ${ScalarType.String}[]`,
     )
+  })
+
+  test('simple string field with native mapping', async () => {
+    const printed = printField(EXAMPLE_STRING_FIELD_WITH_NATIVE_MAPPING, POSTGRES_SQL_PROVIDER)
+
+    expect(printed).toEqual(`${EXAMPLE_FIELD_NAME} ${ScalarType.String} @db.Text`)
+  })
+
+  test('simple string field with native mapping with args', async () => {
+    const printed = printField(
+      EXAMPLE_STRING_FIELD_WITH_NATIVE_MAPPING_WITH_ARGS,
+      POSTGRES_SQL_PROVIDER,
+    )
+
+    expect(printed).toEqual(`${EXAMPLE_FIELD_NAME} ${ScalarType.String} @db.VarChar(255)`)
   })
 
   test('datetime fields', () => {

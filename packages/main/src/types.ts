@@ -79,6 +79,15 @@ export enum ScalarType {
 }
 
 /**
+ * Prisma's data model native mappings
+ * @see https://www.prisma.io/docs/concepts/components/prisma-schema/data-model#native-types-mapping
+ */
+export interface NativeMapping {
+  name: string
+  arguments?: Array<unknown>
+}
+
+/**
  * Prisma's referential actions
  * @see https://www.prisma.io/docs/concepts/components/prisma-schema/relations/referential-actions#types-of-referential-actions
  */
@@ -123,6 +132,7 @@ export type BaseField = {
   name: string
   isList: boolean
   isRequired: boolean
+  nativeMapping?: NativeMapping
   /** @see https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-schema#comments */
   documentation?: string
 }
