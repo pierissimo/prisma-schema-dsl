@@ -3,6 +3,7 @@ import { DefaultValueFunctions } from './helpers'
 import {
   FullTextIndex,
   Index,
+  NativeMapping,
   ReferentialActions,
   ScalarType,
   UniqueIndex,
@@ -18,6 +19,7 @@ type DefaultValue =
 export interface ScalarDecoratorOptions {
   name?: string
   type?: TypeValue | ScalarType
+  nativeMapping?: NativeMapping
   isList?: boolean
   required?: boolean
   isUnique?: boolean
@@ -31,6 +33,7 @@ export interface ScalarDecoratorOptions {
 export interface ObjectDecoratorOptions {
   name?: string
   type?: string
+  nativeMapping?: NativeMapping
   isList?: boolean
   required?: boolean
   relationName?: string | null
