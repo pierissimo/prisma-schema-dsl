@@ -1,6 +1,6 @@
 {
   "name": "@pmaltese/davinci-prisma",
-  "version": "1.3.2",
+  "version": "1.4.0",
   "description": "Prisma generator module for DaVinci",
   "main": "dist/index.js",
   "scripts": {

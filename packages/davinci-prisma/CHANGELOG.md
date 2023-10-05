@@ -1,5 +1,11 @@
 # @pmaltese/davinci-prisma
 
+## 1.4.0
+
+### Minor Changes
+
+- 816bf1e: Added support for native mappings
+
 ## 1.3.2
 
 ### Patch Changes
