@@ -11,6 +11,7 @@ import {
   Index,
   isCallExpression,
   Model,
+  NativeMapping,
   NOW,
   ObjectField,
   PreviewFeature,
@@ -130,6 +131,7 @@ export function createView({
 export function createScalarField({
   name,
   type,
+  nativeMapping,
   isList = false,
   isRequired = false,
   isUnique = false,
@@ -141,6 +143,7 @@ export function createScalarField({
 }: {
   name: string
   type: ScalarType
+  nativeMapping?: NativeMapping
   isList?: boolean
   isRequired?: boolean
   isUnique?: boolean
@@ -160,6 +163,7 @@ export function createScalarField({
     isUnique,
     kind: FieldKind.Scalar,
     type,
+    nativeMapping,
     isId,
     isUpdatedAt,
     default: defaultValue,
@@ -229,6 +233,7 @@ function validateScalarDefault(type: ScalarType, value: ScalarFieldDefault) {
 export function createObjectField({
   name,
   type,
+  nativeMapping,
   isList = false,
   isRequired = false,
   relationName = null,
@@ -240,6 +245,7 @@ export function createObjectField({
 }: {
   name: string
   type: string
+  nativeMapping?: NativeMapping
   isList?: boolean
   isRequired?: boolean
   relationName?: string | null
@@ -258,6 +264,7 @@ export function createObjectField({
     isRequired,
     kind: FieldKind.Object,
     type,
+    nativeMapping,
     relationName,
     relationToFields: relationFields,
     relationToReferences: relationReferences,

@@ -15,6 +15,20 @@ export const EXAMPLE_STRING_FIELD = createScalarField({
   isList: false,
   isRequired: true,
 })
+export const EXAMPLE_STRING_FIELD_WITH_NATIVE_MAPPING = createScalarField({
+  name: EXAMPLE_FIELD_NAME,
+  type: ScalarType.String,
+  nativeMapping: { name: 'Text' },
+  isList: false,
+  isRequired: true,
+})
+export const EXAMPLE_STRING_FIELD_WITH_NATIVE_MAPPING_WITH_ARGS = createScalarField({
+  name: EXAMPLE_FIELD_NAME,
+  type: ScalarType.String,
+  nativeMapping: { name: 'VarChar', arguments: [255] },
+  isList: false,
+  isRequired: true,
+})
 export const EXAMPLE_STRING_ID_FIELD = createScalarField({
   name: EXAMPLE_FIELD_NAME,
   type: ScalarType.String,
