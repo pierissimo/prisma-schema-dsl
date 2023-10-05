@@ -24,7 +24,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@pmaltese/prisma-schema-generator": "workspace:*"
+    "@pmaltese/prisma-schema-generator": "5.2.1"
   },
   "peerDependencies": {
     "@davinci/core": "^2.9.0",
