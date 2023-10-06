@@ -1,6 +1,6 @@
 {
   "name": "@pmaltese/prisma-schema-generator",
-  "version": "5.2.1",
+  "version": "6.0.0",
   "description": "JavaScript SDK to generate Prisma Schema file",
   "main": "dist/index.js",
   "scripts": {
