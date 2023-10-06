@@ -1,5 +1,11 @@
 # @pmaltese/prisma-schema-dsl
 
+## 6.0.0
+
+### Major Changes
+
+- b957786: Changed function signature in few utilities. It's a breaking change
+
 ## 5.2.1
 
 ### Patch Changes

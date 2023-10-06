@@ -1,5 +1,12 @@
 # @pmaltese/davinci-prisma
 
+## 1.4.1
+
+### Patch Changes
+
+- Updated dependencies [b957786]
+  - @pmaltese/prisma-schema-generator@6.0.0
+
 ## 1.4.0
 
 ### Minor Changes

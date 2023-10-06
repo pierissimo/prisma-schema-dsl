@@ -1,6 +1,6 @@
 {
   "name": "@pmaltese/davinci-prisma",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Prisma generator module for DaVinci",
   "main": "dist/index.js",
   "scripts": {
@@ -24,7 +24,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@pmaltese/prisma-schema-generator": "5.2.1"
+    "@pmaltese/prisma-schema-generator": "6.0.0"
   },
   "peerDependencies": {
     "@davinci/core": "^2.9.0",

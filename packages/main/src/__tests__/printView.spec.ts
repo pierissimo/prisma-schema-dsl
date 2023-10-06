@@ -1,6 +1,7 @@
 import { createGenerator, createView } from '../builders'
 import { print, printUniqueIndexes, printView } from '../print'
 import {
+  EXAMPLE_DATA_SOURCE,
   EXAMPLE_DOCUMENTATION,
   EXAMPLE_FIELD_NAME,
   EXAMPLE_MODEL_MAP,
@@ -23,6 +24,7 @@ const generateDMMF = async (view: View) => {
     views: [view],
     generators: [generator],
     enums: [],
+    dataSource: EXAMPLE_DATA_SOURCE,
   })
 
   return getDMMF({ datamodel: printed })
@@ -188,7 +190,7 @@ describe('printView', () => {
       fields: [EXAMPLE_STRING_ID_FIELD, EXAMPLE_OTHER_STRING_FIELD],
       uniqueIndexes: [{ fields: [{ name: EXAMPLE_FIELD_NAME, sort: 'asc' }] }],
     })
-    const printed = printView(view)
+    const printed = printView(view, EXAMPLE_DATA_SOURCE)
     const meta = await generateDMMF(view)
 
     expect(printed).toContain(
@@ -240,7 +242,7 @@ describe('printView', () => {
         },
       ],
     })
-    const printed = printView(view)
+    const printed = printView(view, EXAMPLE_DATA_SOURCE)
     const meta = await generateDMMF(view)
 
     expect(printed).toContain(

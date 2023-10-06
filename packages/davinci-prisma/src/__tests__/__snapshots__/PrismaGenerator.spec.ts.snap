@@ -15,7 +15,7 @@ model Customer {
   id             String          @id
   firstname      String
   lastname       String
-  storyOfHisLife String?         @db.VarChar(10000)
+  storyOfHisLife String?         @myDatasource.VarChar(10000)
   tokens         CustomerToken[]
 }
 

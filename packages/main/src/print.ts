@@ -44,9 +44,9 @@ export async function print(schema: Schema): Promise<string> {
   }
   const providerType = schema.dataSource?.provider
 
-  statements.push(...schema.models.map((model) => printModel(model, providerType)))
+  statements.push(...schema.models.map((model) => printModel(model, schema.dataSource)))
   statements.push(...schema.enums.map(printEnum))
-  statements.push(...(schema.views ?? []).map((view) => printView(view, providerType)))
+  statements.push(...(schema.views ?? []).map((view) => printView(view, schema.dataSource)))
 
   const schemaText = statements.join('\n')
   return formatSchema({ schema: schemaText })
@@ -133,11 +133,8 @@ export function printEnum(enum_: Enum): string {
  * @param model the model AST
  * @returns code of the model
  */
-export function printModel(
-  model: Model,
-  provider: DataSourceProvider = DataSourceProvider.PostgreSQL,
-): string {
-  const fieldTexts = model.fields.map((field) => printField(field, provider)).join('\n')
+export function printModel(model: Model, dataSource?: DataSource): string {
+  const fieldTexts = model.fields.map((field) => printField(field, dataSource)).join('\n')
   const map = model.map ? printModelMap(model.map, true) : ''
   const indexes = model.indexes ? printModelIndexes(model.indexes, true) : ''
   const uniqueIndexes = model.uniqueIndexes ? printUniqueIndexes(model.uniqueIndexes, true) : ''
@@ -157,11 +154,8 @@ export function printModel(
  * @param view the view AST
  * @returns code of the model
  */
-export function printView(
-  view: View,
-  provider: DataSourceProvider = DataSourceProvider.PostgreSQL,
-): string {
-  const fieldTexts = view.fields.map((field) => printField(field, provider)).join('\n')
+export function printView(view: View, dataSource?: DataSource): string {
+  const fieldTexts = view.fields.map((field) => printField(field, dataSource)).join('\n')
   const map = view.map ? printModelMap(view.map, true) : ''
   const uniqueIndexes = view.uniqueIndexes ? printUniqueIndexes(view.uniqueIndexes, true) : ''
 
@@ -177,17 +171,19 @@ export function printView(
  * @param field the field AST
  * @returns code of the field
  */
-export function printField(field: ObjectField | ScalarField, provider: DataSourceProvider) {
+export function printField(field: ObjectField | ScalarField, dataSource?: DataSource) {
   return withDocumentation(
     field.documentation,
-    field.kind === FieldKind.Scalar ? printScalarField(field, provider) : printObjectField(field),
+    field.kind === FieldKind.Scalar
+      ? printScalarField(field, dataSource)
+      : printObjectField(field, dataSource),
   )
 }
 
-function printScalarField(field: ScalarField, provider: DataSourceProvider): string {
+function printScalarField(field: ScalarField, dataSource?: DataSource): string {
   const modifiersText = printFieldModifiers(field)
   const attributes: string[] = []
-  const isMongoDBProvider = provider === DataSourceProvider.MongoDB
+  const isMongoDBProvider = dataSource?.provider === DataSourceProvider.MongoDB
 
   if (field.isId) {
     if (isMongoDBProvider) {
@@ -208,9 +204,14 @@ function printScalarField(field: ScalarField, provider: DataSourceProvider): str
     attributes.push('@updatedAt')
   }
   if (field.nativeMapping) {
+    if (!dataSource) {
+      throw new Error('Datasource is required when using the native mapping')
+    }
     let baseAttribute = field.nativeMapping.name
     const args = field.nativeMapping.arguments
-    const attribute = `@db.${baseAttribute}${args ? `(${safeMergeArguments(args)})` : ''}`
+    const attribute = `@${dataSource.name}.${baseAttribute}${
+      args ? `(${safeMergeArguments(args)})` : ''
+    }`
     attributes.push(attribute)
   }
   if (field.default) {
@@ -243,7 +244,7 @@ function printScalarDefault(value: ScalarFieldDefault): string {
   throw new Error(`Invalid value: ${value}`)
 }
 
-function printObjectField(field: ObjectField): string {
+function printObjectField(field: ObjectField, dataSource?: DataSource): string {
   const relation: Relation = {}
 
   if (field.relationName) {
@@ -257,9 +258,14 @@ function printObjectField(field: ObjectField): string {
   }
   const attributes: string[] = []
   if (field.nativeMapping) {
+    if (!dataSource) {
+      throw new Error('Datasource is required when using the native mapping')
+    }
     let baseAttribute = field.nativeMapping.name
     const args = field.nativeMapping.arguments
-    const attribute = `@db.${baseAttribute}${args ? `(${safeMergeArguments(args)})` : ''}`
+    const attribute = `@${dataSource.name}.${baseAttribute}${
+      args ? `(${safeMergeArguments(args)})` : ''
+    }`
     attributes.push(attribute)
   }
   if (!isEmpty(relation)) {
