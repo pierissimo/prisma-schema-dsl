@@ -1,5 +1,5 @@
 import { createModel, createScalarField } from '../builders'
-import { DataSourceProvider, ScalarType } from '../types'
+import { DataSource, DataSourceProvider, ScalarType } from '../types'
 
 export const EXAMPLE_DOCUMENTATION = 'Example Documentation'
 export const EXAMPLE_ENUM_NAME = 'ExampleEnumName'
@@ -56,6 +56,11 @@ export const EXAMPLE_GENERATOR_PREVIEW_FEATURE = 'fullTextSearch'
 export const EXAMPLE_DATA_SOURCE_NAME = 'exampleDataSource'
 export const EXAMPLE_DATA_SOURCE_PROVIDER = DataSourceProvider.MySQL
 export const EXAMPLE_DATA_SOURCE_URL = 'mysql://example.com'
+export const EXAMPLE_DATA_SOURCE: DataSource = {
+  name: EXAMPLE_DATA_SOURCE_NAME,
+  provider: EXAMPLE_DATA_SOURCE_PROVIDER,
+  url: EXAMPLE_DATA_SOURCE_NAME,
+}
 export const EXAMPLE_RELATION_NAME = 'exampleRelationName'
 export const EXAMPLE_MODEL_MAP = 'ExampleMappedName'
 export const EXAMPLE_MODEL_SINGLE_INDEX = 'example-field-name-for-index'

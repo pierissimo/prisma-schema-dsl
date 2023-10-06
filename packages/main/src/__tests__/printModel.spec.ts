@@ -9,6 +9,7 @@ import {
 import { DataSourceProvider } from '../types'
 import { getDMMF } from '@prisma/internals'
 import {
+  EXAMPLE_DATA_SOURCE,
   EXAMPLE_DOCUMENTATION,
   EXAMPLE_FIELD_NAME,
   EXAMPLE_MODEL_MAP,
@@ -16,7 +17,6 @@ import {
   EXAMPLE_OTHER_FIELD_NAME,
   EXAMPLE_OTHER_STRING_FIELD,
   EXAMPLE_STRING_ID_FIELD,
-  POSTGRES_SQL_PROVIDER,
 } from './data'
 
 describe('printModel', () => {
@@ -25,7 +25,7 @@ describe('printModel', () => {
       name: EXAMPLE_MODEL_NAME,
       fields: [EXAMPLE_STRING_ID_FIELD],
     })
-    const printed = printModel(model, POSTGRES_SQL_PROVIDER)
+    const printed = printModel(model, EXAMPLE_DATA_SOURCE)
     const meta = await getDMMF({ datamodel: printed })
 
     expect(meta).toMatchObject({
@@ -62,7 +62,7 @@ describe('printModel', () => {
       fields: [EXAMPLE_STRING_ID_FIELD],
       documentation: EXAMPLE_DOCUMENTATION,
     })
-    const printed = printModel(model, POSTGRES_SQL_PROVIDER)
+    const printed = printModel(model, EXAMPLE_DATA_SOURCE)
     const meta = await getDMMF({ datamodel: printed })
 
     expect(meta).toMatchObject({
@@ -98,7 +98,7 @@ describe('printModel', () => {
       name: EXAMPLE_MODEL_NAME,
       fields: [EXAMPLE_STRING_ID_FIELD, EXAMPLE_OTHER_STRING_FIELD],
     })
-    const printed = printModel(model, POSTGRES_SQL_PROVIDER)
+    const printed = printModel(model, EXAMPLE_DATA_SOURCE)
     const meta = await getDMMF({ datamodel: printed })
 
     expect(meta).toMatchObject({
@@ -148,7 +148,7 @@ describe('printModel', () => {
       documentation: '',
       map: EXAMPLE_MODEL_MAP,
     })
-    const printed = printModel(EXAMPLE_MODEL)
+    const printed = printModel(EXAMPLE_MODEL, EXAMPLE_DATA_SOURCE)
     const meta = await getDMMF({ datamodel: printed })
 
     expect(meta).toMatchObject({
@@ -185,7 +185,7 @@ describe('printModel', () => {
       fields: [EXAMPLE_STRING_ID_FIELD, EXAMPLE_OTHER_STRING_FIELD],
       indexes: [{ fields: [{ name: EXAMPLE_FIELD_NAME, sort: 'asc' }] }],
     })
-    const printed = printModel(model)
+    const printed = printModel(model, EXAMPLE_DATA_SOURCE)
     const meta = await getDMMF({ datamodel: printed })
 
     expect(printed).toContain(
@@ -245,7 +245,7 @@ describe('printModel', () => {
         },
       ],
     })
-    const printed = printModel(model)
+    const printed = printModel(model, EXAMPLE_DATA_SOURCE)
     const meta = await getDMMF({ datamodel: printed })
 
     expect(printed).toContain(
@@ -304,7 +304,7 @@ describe('printModel', () => {
       fields: [EXAMPLE_STRING_ID_FIELD, EXAMPLE_OTHER_STRING_FIELD],
       uniqueIndexes: [{ fields: [{ name: EXAMPLE_FIELD_NAME, sort: 'asc' }] }],
     })
-    const printed = printModel(model)
+    const printed = printModel(model, EXAMPLE_DATA_SOURCE)
     const meta = await getDMMF({ datamodel: printed })
 
     expect(printed).toContain(
@@ -356,7 +356,7 @@ describe('printModel', () => {
         },
       ],
     })
-    const printed = printModel(model)
+    const printed = printModel(model, EXAMPLE_DATA_SOURCE)
     const meta = await getDMMF({ datamodel: printed })
 
     expect(printed).toContain(

@@ -2,6 +2,7 @@ import { printDocumentation, printField } from '../print'
 import { AUTO_INCREMENT, CUID, NOW, ScalarType, UUID } from '../types'
 import { createObjectField, createScalarField } from '../builders'
 import {
+  EXAMPLE_DATA_SOURCE,
   EXAMPLE_DOCUMENTATION,
   EXAMPLE_FIELD_NAME,
   EXAMPLE_OBJECT_NAME,
@@ -11,12 +12,11 @@ import {
   EXAMPLE_STRING_FIELD,
   EXAMPLE_STRING_FIELD_WITH_NATIVE_MAPPING,
   EXAMPLE_STRING_FIELD_WITH_NATIVE_MAPPING_WITH_ARGS,
-  POSTGRES_SQL_PROVIDER,
 } from './data'
 
 describe('printField', () => {
   test('simple string field', async () => {
-    const printed = printField(EXAMPLE_STRING_FIELD, POSTGRES_SQL_PROVIDER)
+    const printed = printField(EXAMPLE_STRING_FIELD, EXAMPLE_DATA_SOURCE)
 
     expect(printed).toEqual(`${EXAMPLE_FIELD_NAME} ${ScalarType.String}`)
   })
@@ -33,7 +33,7 @@ describe('printField', () => {
       defaultValue: undefined,
       documentation: EXAMPLE_DOCUMENTATION,
     })
-    const result = printField(fieldWithDoc, POSTGRES_SQL_PROVIDER)
+    const result = printField(fieldWithDoc, EXAMPLE_DATA_SOURCE)
     expect(result).toEqual(
       `${printDocumentation(EXAMPLE_DOCUMENTATION)}\n${EXAMPLE_FIELD_NAME} ${ScalarType.String}`,
     )
@@ -46,7 +46,7 @@ describe('printField', () => {
       isList: false,
       isRequired: true,
     })
-    const result = printField(floatField, POSTGRES_SQL_PROVIDER)
+    const result = printField(floatField, EXAMPLE_DATA_SOURCE)
     expect(result).toEqual(`${EXAMPLE_FIELD_NAME} ${ScalarType.Float}`)
   })
 
@@ -57,7 +57,7 @@ describe('printField', () => {
       isRequired: false,
       isUnique: false,
     })
-    expect(printField(field, POSTGRES_SQL_PROVIDER)).toBe(
+    expect(printField(field, EXAMPLE_DATA_SOURCE)).toBe(
       `${EXAMPLE_FIELD_NAME} ${ScalarType.String}?`,
     )
   })
@@ -69,7 +69,7 @@ describe('printField', () => {
       isRequired: true,
       isUnique: false,
     })
-    expect(printField(field, POSTGRES_SQL_PROVIDER)).toBe(
+    expect(printField(field, EXAMPLE_DATA_SOURCE)).toBe(
       `${EXAMPLE_FIELD_NAME} ${ScalarType.String}`,
     )
   })
@@ -81,7 +81,7 @@ describe('printField', () => {
       isRequired: true,
       isUnique: false,
     })
-    expect(printField(field, POSTGRES_SQL_PROVIDER)).toBe(`${EXAMPLE_FIELD_NAME} ${ScalarType.Int}`)
+    expect(printField(field, EXAMPLE_DATA_SOURCE)).toBe(`${EXAMPLE_FIELD_NAME} ${ScalarType.Int}`)
   })
 
   test('simple array fields', () => {
@@ -91,24 +91,28 @@ describe('printField', () => {
       isList: true,
       isRequired: true,
     })
-    expect(printField(field, POSTGRES_SQL_PROVIDER)).toBe(
+    expect(printField(field, EXAMPLE_DATA_SOURCE)).toBe(
       `${EXAMPLE_FIELD_NAME} ${ScalarType.String}[]`,
     )
   })
 
   test('simple string field with native mapping', async () => {
-    const printed = printField(EXAMPLE_STRING_FIELD_WITH_NATIVE_MAPPING, POSTGRES_SQL_PROVIDER)
+    const printed = printField(EXAMPLE_STRING_FIELD_WITH_NATIVE_MAPPING, EXAMPLE_DATA_SOURCE)
 
-    expect(printed).toEqual(`${EXAMPLE_FIELD_NAME} ${ScalarType.String} @db.Text`)
+    expect(printed).toEqual(
+      `${EXAMPLE_FIELD_NAME} ${ScalarType.String} @${EXAMPLE_DATA_SOURCE.name}.Text`,
+    )
   })
 
   test('simple string field with native mapping with args', async () => {
     const printed = printField(
       EXAMPLE_STRING_FIELD_WITH_NATIVE_MAPPING_WITH_ARGS,
-      POSTGRES_SQL_PROVIDER,
+      EXAMPLE_DATA_SOURCE,
     )
 
-    expect(printed).toEqual(`${EXAMPLE_FIELD_NAME} ${ScalarType.String} @db.VarChar(255)`)
+    expect(printed).toEqual(
+      `${EXAMPLE_FIELD_NAME} ${ScalarType.String} @${EXAMPLE_DATA_SOURCE.name}.VarChar(255)`,
+    )
   })
 
   test('datetime fields', () => {
@@ -121,7 +125,7 @@ describe('printField', () => {
       isId: false,
       isUpdatedAt: false,
     })
-    expect(printField(field, POSTGRES_SQL_PROVIDER)).toBe(
+    expect(printField(field, EXAMPLE_DATA_SOURCE)).toBe(
       `${EXAMPLE_FIELD_NAME} ${ScalarType.DateTime}`,
     )
   })
@@ -133,7 +137,7 @@ describe('printField', () => {
       isRequired: true,
       defaultValue: 42,
     })
-    expect(printField(field, POSTGRES_SQL_PROVIDER)).toBe(
+    expect(printField(field, EXAMPLE_DATA_SOURCE)).toBe(
       `${EXAMPLE_FIELD_NAME} ${ScalarType.Int} @default(42)`,
     )
   })
@@ -145,7 +149,7 @@ describe('printField', () => {
       isRequired: true,
       defaultValue: { callee: AUTO_INCREMENT },
     })
-    expect(printField(field, POSTGRES_SQL_PROVIDER)).toBe(
+    expect(printField(field, EXAMPLE_DATA_SOURCE)).toBe(
       `${EXAMPLE_FIELD_NAME} ${ScalarType.Int} @default(autoincrement())`,
     )
   })
@@ -157,7 +161,7 @@ describe('printField', () => {
       isRequired: true,
       defaultValue: { callee: UUID },
     })
-    expect(printField(field, POSTGRES_SQL_PROVIDER)).toBe(
+    expect(printField(field, EXAMPLE_DATA_SOURCE)).toBe(
       `${EXAMPLE_FIELD_NAME} ${ScalarType.String} @default(uuid())`,
     )
   })
@@ -169,7 +173,7 @@ describe('printField', () => {
       isRequired: true,
       defaultValue: { callee: CUID },
     })
-    expect(printField(field, POSTGRES_SQL_PROVIDER)).toBe(
+    expect(printField(field, EXAMPLE_DATA_SOURCE)).toBe(
       `${EXAMPLE_FIELD_NAME} ${ScalarType.String} @default(cuid())`,
     )
   })
@@ -181,7 +185,7 @@ describe('printField', () => {
       isRequired: true,
       defaultValue: { callee: NOW },
     })
-    expect(printField(field, POSTGRES_SQL_PROVIDER)).toBe(
+    expect(printField(field, EXAMPLE_DATA_SOURCE)).toBe(
       `${EXAMPLE_FIELD_NAME} ${ScalarType.DateTime} @default(now())`,
     )
   })
@@ -198,7 +202,7 @@ describe('printField', () => {
       defaultValue: true,
     })
     const expected = `${EXAMPLE_FIELD_NAME} ${ScalarType.Boolean} @default(true)`
-    expect(printField(field, POSTGRES_SQL_PROVIDER)).toBe(expected)
+    expect(printField(field, EXAMPLE_DATA_SOURCE)).toBe(expected)
   })
 
   test('simple object field', () => {
@@ -209,7 +213,7 @@ describe('printField', () => {
       isRequired: true,
     })
     const expected = `${EXAMPLE_FIELD_NAME} ${EXAMPLE_OBJECT_NAME}`
-    expect(printField(field, POSTGRES_SQL_PROVIDER)).toBe(expected)
+    expect(printField(field, EXAMPLE_DATA_SOURCE)).toBe(expected)
   })
 
   test('object field with relation', () => {
@@ -221,7 +225,7 @@ describe('printField', () => {
       relationName: EXAMPLE_RELATION_NAME,
     })
     const expected = `${EXAMPLE_FIELD_NAME} ${EXAMPLE_OBJECT_NAME} @relation(name: "${EXAMPLE_RELATION_NAME}")`
-    expect(printField(field, POSTGRES_SQL_PROVIDER)).toBe(expected)
+    expect(printField(field, EXAMPLE_DATA_SOURCE)).toBe(expected)
   })
 
   test('object field with fields', () => {
@@ -234,7 +238,7 @@ describe('printField', () => {
       relationFields: [EXAMPLE_RELATION_FIELD_NAME],
     })
     const expected = `${EXAMPLE_FIELD_NAME} ${EXAMPLE_OBJECT_NAME} @relation(fields: [${EXAMPLE_RELATION_FIELD_NAME}])`
-    expect(printField(field, POSTGRES_SQL_PROVIDER)).toBe(expected)
+    expect(printField(field, EXAMPLE_DATA_SOURCE)).toBe(expected)
   })
 
   test('object field with references', () => {
@@ -248,7 +252,7 @@ describe('printField', () => {
       relationReferences: [EXAMPLE_RELATION_REFERENCE_FIELD_NAME],
     })
     const expected = `${EXAMPLE_FIELD_NAME} ${EXAMPLE_OBJECT_NAME} @relation(references: [${EXAMPLE_RELATION_REFERENCE_FIELD_NAME}])`
-    expect(printField(field, POSTGRES_SQL_PROVIDER)).toBe(expected)
+    expect(printField(field, EXAMPLE_DATA_SOURCE)).toBe(expected)
   })
 
   test('object field with full relation', () => {
@@ -262,6 +266,6 @@ describe('printField', () => {
       relationReferences: [EXAMPLE_RELATION_REFERENCE_FIELD_NAME],
     })
     const expected = `${EXAMPLE_FIELD_NAME} ${EXAMPLE_OBJECT_NAME} @relation(name: "${EXAMPLE_RELATION_NAME}", fields: [${EXAMPLE_RELATION_FIELD_NAME}], references: [${EXAMPLE_RELATION_REFERENCE_FIELD_NAME}])`
-    expect(printField(field, POSTGRES_SQL_PROVIDER)).toBe(expected)
+    expect(printField(field, EXAMPLE_DATA_SOURCE)).toBe(expected)
   })
 })
