@@ -18,7 +18,7 @@ importers:
   packages/davinci-prisma:
     dependencies:
       '@pmaltese/prisma-schema-generator':
-        specifier: 5.2.1
+        specifier: 6.0.0
         version: link:../main
     devDependencies:
       '@davinci/core':
