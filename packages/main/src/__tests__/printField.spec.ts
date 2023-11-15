@@ -142,6 +142,18 @@ describe('printField', () => {
     )
   })
 
+  test('default value: int with falsy default', () => {
+    const field = createScalarField({
+      name: EXAMPLE_FIELD_NAME,
+      type: ScalarType.Int,
+      isRequired: true,
+      defaultValue: 0,
+    })
+    expect(printField(field, EXAMPLE_DATA_SOURCE)).toBe(
+      `${EXAMPLE_FIELD_NAME} ${ScalarType.Int} @default(0)`,
+    )
+  })
+
   test('default value: int with autoincrement()', () => {
     const field = createScalarField({
       name: EXAMPLE_FIELD_NAME,
