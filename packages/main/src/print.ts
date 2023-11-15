@@ -214,7 +214,7 @@ function printScalarField(field: ScalarField, dataSource?: DataSource): string {
     }`
     attributes.push(attribute)
   }
-  if (field.default) {
+  if (field.default !== null && typeof field.default !== 'undefined') {
     if (!isMongoDBProvider || !field.isId) {
       attributes.push(`@default(${printScalarDefault(field.default)})`)
     }
