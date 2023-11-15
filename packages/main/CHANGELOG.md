@@ -1,5 +1,11 @@
 # @pmaltese/prisma-schema-dsl
 
+## 6.0.1
+
+### Patch Changes
+
+- 6ca15aa: Fix: default values can now be falsy
+
 ## 6.0.0
 
 ### Major Changes
