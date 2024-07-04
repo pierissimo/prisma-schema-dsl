@@ -9,7 +9,7 @@ JavaScript interface for [Prisma Schema DSL](https://www.prisma.io/docs/referenc
 ## Installation
 
 ```
-npm install prisma-schema-dsl
+npm install @pmaltese/prisma-schema-generator
 ```
 
 ## API
@@ -59,5 +59,3 @@ Creates a data source AST object
 - Run tests `npm test`
 
 ---
-
-Created with <3 by amplication
