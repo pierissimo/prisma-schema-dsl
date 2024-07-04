@@ -6,7 +6,7 @@ Introduction:
 
 API:
 
-The following functions are available in the `prisma-schema-generator` package:
+The following functions are available in the [`prisma-schema-generator`](./packages/main) package:
 
 ### Print
 
@@ -30,7 +30,7 @@ function createSchema(options: {
 }): Schema;
 ```
 
-#### Create an enum AST object and validates the given name argument.
+#### Create an enum AST object and validate the given name argument.
 
 ```typescript
 function createEnum(options: {
@@ -40,7 +40,7 @@ function createEnum(options: {
 }): Enum;
 ```
 
-#### Create a model AST object and validates the given name argument.
+#### Create a model AST object and validate the given name argument.
 
 ```typescript
 function createModel(options: {
@@ -53,7 +53,7 @@ function createModel(options: {
 }): Model;
 ```
 
-#### Create a scalar field AST object and validates the given name argument.
+#### Create a scalar field AST object and validate the given name argument.
 
 ```typescript
 function createScalarField(options: {
@@ -70,7 +70,7 @@ function createScalarField(options: {
 }): ScalarField;
 ```
 
-#### Create an object field AST object and validates the given name argument.
+#### Create an object field AST object and validate the given name argument.
 
 ```typescript
 function createObjectField(options: {
